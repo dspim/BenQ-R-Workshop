@@ -1,0 +1,768 @@
+---
+title: "EDA with R"
+subtitle: Data Visualization with **ggplot2** 
+author: "DSP作者群 @BenQ Workshop"
+date:  "2018-06-13"
+output:
+  ioslides_presentation:
+    css: css/dsp.css
+    widescreen: yes
+    self_contained: false
+---
+```{r ,echo=FALSE,warning=FALSE,message=F}
+options('scipen'=100,'digits'=2)
+knitr::opts_chunk$set(comment="",prompt=F,strip.white=F,
+                      warning=FALSE,message=F,echo=T,
+                      fig.align='center',fig.height=3.5)
+library(dplyr)
+library(dygraphs)
+library(ggplot2)
+library(data.table)
+library(devtools)
+library(plotly)
+library(xtable)
+library(rCharts)
+library(tidyr)
+library(DT)
+library(RColorBrewer)
+library(dplyr)
+library(ggthemr)
+ggthemr('flat')
+```
+# 課程綱要
+
+## Agenda 
+
+<div style='float:left;width:48%;'>
+
+- Data Visualization
+- `ggplot2` in R
+    * 基本架構介紹
+    * 起手式(基本語法)
+    * 應用(各種圖形的呈現)
+        + `Bar`
+        + `Line`
+        + `Histogram`
+        + `Point`
+        + `Heatmap`
+    * 進階技巧
+
+</div>
+
+<div style='float:left;width:48%;'>
+
+- 互動式視覺化呈現
+- Bonus
+
+<img src='img/a2.jpg' style='height: 350px'></img>
+
+</div>
+
+## Data Visualization
+
+<div style='float:left;width:48%;'>
+
+- 清晰有效地傳達與溝通訊息
+- 教學、研究、宣傳
+- 美學、功能兼顧
+- 統計圖形、訊息可視化
+- 一張好圖，勝過千言萬語
+
+</div>
+
+<div style='float:left;width:48%;'>
+
+<img src='img/w2.png' style='height: 450px'></img>
+
+</div>
+
+
+## ggplot2 簡介
+
+<div style='float:left;width:50%;'>
+- 套件下載次數第一名([Source](https://www.rdocumentation.org/trends?page1=1&sort1=direct&page2=1&sort2=total&page3=1&page4=1))
+- R環境下的繪圖套件
+- 取自 “The Grammar of Graphics” (Leland Wilkinson, 2005)
+- [設計理念](https://github.com/cosname/ggplot2-translation/blob/master/preface.md)
+    - 採用圖層系統
+    - 用抽象的概念來控制圖形，</br>
+      避免細節繁瑣
+    - 圖形美觀
+</div>   
+
+<div style='float:right;width:48%;'>
+<img src='img/most_download_in_R.png' width=420 align='center'></img>
+</div> 
+
+## The Anatomy of a Plot 
+
+<center>
+<img src='img/anatomy.png' width=750 align='center'></img>
+</center>
+
+## ggplot2 基本架構
+
+- 資料 (data) 和映射 (mapping)
+- 幾何對象 (`geom`etric)
+- 座標尺度 (`scale`)
+- 統計轉換 (`stat`istics)
+- 座標系統 (`coord`inante)
+- 圖層 (layer)
+- 刻面 (`facet`)
+- 主題 (`theme`)
+
+## ggplot2 基本架構(2)
+
+<center>
+<img src='img/ggplot.jpeg' width=550 align='center'></img>
+</br>
+source: http://goo.gl/Odt2Rs
+</center>
+
+## ggplot2 基本語法 
+
+```{r echo=TRUE, eval=FALSE}
+ggplot(data=..., aes(x=..., y=...)) + 
+  geom_xxx(...) +
+  stat_xxx(...) + 
+  facet_xxx(...) + ...
+```
+
+- `ggplot` 描述 data 從哪來
+- `aes` 描述圖上的元素跟 data 之類的對應關係
+- `geom_xxx` 描述要畫圖的類型及相關調整的參數
+- 常用的類型諸如：`geom_bar`, `geom_line`, `geom_points`, ...
+
+# 圖層概念的實作
+
+# 前菜 - ggplot2到底有多少種圖
+
+## Various functions
+
+```{r}
+library(ggplot2)
+# list all geom
+ls(pattern = '^geom_', env = as.environment('package:ggplot2'))
+```
+
+## **注意**
+
+- 使用 `data.frame` 儲存資料 (不可以丟 matrix 物件)
+- 使用 `wide format`  to `long format` 
+
+</br>
+
+<center>![](img/wide-long.png)</center>
+
+# 正片開始
+
+## 首先請先安裝以下套件
+
+- 安裝套件
+```{r echo=TRUE, eval=FALSE}
+install.packages(c("tidyr","dplyr","ggplot2"))
+```
+
+- 載入套件 (**注意**：下載完套件一定要記得 `library` 才能使用喲！)
+```{r echo=TRUE, eval=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+`or`
+
+- 安裝套件
+```{r echo=TRUE, eval=FALSE}
+install.packages("tidyverse")
+```
+
+- 載入套件 (**注意**：下載完套件一定要記得 `library` 才能使用喲！)
+```{r echo=TRUE, eval=FALSE}
+library(tidyverse)
+```
+
+## 一切從讀檔開始（CSV）
+
+- [課程資料下載](https://ling32342.github.io/2017_NCCU_R/data/transaction.csv)
+
+```{r,eval=FALSE}
+############### 相對路徑 ###############
+# 瞭解現在我們所處在的路徑
+getwd()
+# 設定我們檔案存放的路徑
+setwd() 
+# 讀檔起手式
+data <- read.csv("transaction.csv") 
+# 若讀入的是亂碼，試試以下
+data <- read.csv("transaction.csv",fileEncoding = 'big5')  #如果你是mac
+data <- read.csv("transaction.csv",fileEncoding = 'utf-8') #如果你是windows
+```
+
+```{r,echo=FALSE}
+data <- read.csv("data/transaction.csv") %>% as.data.frame()
+data <- data[,-1]
+data$trac_month <- factor(data$trac_month)
+```
+
+## 資料介紹
+```{r, echo=FALSE}
+head(data[,sample(1:15,6)],5) %>% 
+  knitr::kable()
+```
+
+## 欄位說明
+
+```{r echo = FALSE,fig.height=3, warning=FALSE, fig.align='center', message=FALSE, results='asis'}
+data.frame(英文欄位名稱=c("city","district","trac_year","trac_month","trac_type","trac_content",
+                   "use_type","build_type","build_ymd","area_land","area_build",
+                   "area_park","price_total","price_unit"),
+           中文欄位名稱=c("縣市","鄉鎮市區","交易年份","交易月份","交易標的","交易筆棟數","使用分區或編定",
+                    "建物型態","建築完成年月","土地移轉總面積.平方公尺.","建物移轉總面積.平方公尺.",
+                    "車位移轉總面積.平方公尺.","總價.元.","單價.元.平方公尺.")) -> name
+
+```
+
+<div style='float:left;width:48%;'>
+```{r, echo = FALSE}
+name[1:7,] %>% knitr::kable()
+```
+
+</div>
+
+<div style='float:right;width:50%;'>
+```{r, echo = FALSE}
+name[8:14,] -> name2
+rownames(name2) <- c(1:7)
+name2 %>% knitr::kable()
+```
+
+</div>
+
+
+## 以為開始了嗎？
+
+- 進行分析前，先去了解資料的型態與特性
+
+```{r echo=TRUE}
+str(data)
+```
+
+## 身為資料分析師，一定要有的好習慣！
+
+- 暸解基本的各變數統計量值
+
+```{r echo=TRUE}
+summary(data) 
+```
+
+
+# 質化 v.s. 量化：Bar Chart
+
+## `geom_bar`
+
+- 先來`比較`看看2013年在各縣市的案件交易量
+
+```{r,warning=FALSE,fig.height=3,fig.align='center', message=FALSE}
+thm <- function() theme(text=element_text(size = 15, family = "SimHei")) # 控制字體與大小
+    # SimHei是只有Mac才有的字體, 用來解決Mac系統中文顯示錯誤的問題
+    # Windows系統使用者請忽略 `+ thm()` 指令
+data %>% 
+  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() # stat = "count" 算個數
+```
+
+## Change labels !
+
+```{r,warning=FALSE,fig.height=3.5,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() +
+  labs(title="各縣市交易量",x="縣市",y="交易量") # lab用來幫圖形的標題、x軸與y軸做命名
+```
+
+## Change colors !
+
+- 顏色調整：`color` vs `fill`?
+```{r,warning=FALSE,fig.height=3.5,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() +
+  labs(title="各縣市交易量",x="縣市",y="交易量") +
+  geom_bar(fill='snow', color='black') # see colors() if you're picky
+```
+
+
+## Bar chart
+
+-  `比較`臺北市各行政區的案件交易量
+
+```{r,warning=FALSE,fig.height=3.5,fig.align='center', message=FALSE}
+# 資料整理
+table = data %>% 
+  filter(city == "臺北市") %>% 
+  group_by(district) %>% 
+  summarise(Count=n())  # dplyr::n 用來計數
+table
+```
+
+## Bar chart
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+table %>% 
+  ggplot(aes(x=district,y=Count)) +
+  geom_bar(stat = "identity") + thm() # stat='identity'以表格的值做為bar的高度
+```
+
+
+## Reoder x
+```{r ,warning=FALSE,fig.align='center', message=FALSE}
+table %>% 
+  ggplot(aes(x=reorder(district,-Count), y=Count)) +
+  geom_bar(stat='identity') + thm() +
+  labs(titles = "臺北市各行政區交易量", x = "行政區", y = "Count")
+```
+
+## 小挑戰
+
+- 計算並`比較`臺北市&高雄市的各使用分區或編定(`use_type`)所佔比例
+
+```{r,echo=FALSE}
+table = data %>% 
+  filter(city == "臺北市" | city == "高雄市" ) %>% 
+  group_by(city,use_type) %>% 
+  summarise(Count = n()) %>% 
+  mutate(rate = round(Count/sum(Count),2) ) 
+table
+```
+
+## 參考解答
+
+```{r, eval=FALSE}
+table = data %>% 
+  filter(city == "臺北市" | city == "高雄市" ) %>% 
+  group_by(city,use_type) %>% 
+  summarise(Count = n()) %>% 
+  mutate(rate = round(Count/sum(Count),2) ) 
+```
+
+<center>
+<img src='img/white2.png' width=600 align='center'></img>
+</center>
+
+## Grouping：`stack`
+```{r,warning=FALSE,fig.align='center', message=FALSE,fig.height=4}
+table %>% 
+  ggplot(aes(x = city, y = Count, fill = use_type)) +
+  geom_bar(stat = 'identity', position = 'stack') + thm() # stack類別堆疊
+```
+
+## Grouping：`dodge`
+```{r,warning=FALSE,fig.align='center', message=FALSE,fig.height=4}
+table %>% 
+  ggplot(aes(x = city, y = rate, fill = use_type)) +
+  geom_bar(stat = 'identity', position = 'dodge')  + # dodge類別並排
+  thm() + scale_fill_discrete(name  ="使用分區或編定")  # 設定圖例的顯示
+```
+
+# 量化 v.s. 量化：Line Chart
+
+## `geom_line`
+
+- 各月份交易量
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+table = data %>% 
+  group_by(trac_month) %>% 
+  summarise(Count=n()) 
+table
+```
+
+## Line chart
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+table %>% 
+  ggplot(aes(x=trac_month,y=Count ,group = 1)) + 
+  geom_line() + thm() + labs(x = "交易月份" , y = "交易數量")
+```
+
+
+## `Multiple` Line
+
+- 各縣市各月份交易量比較
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+table = data %>% 
+  group_by(city,trac_month) %>% 
+  summarise(Count=n()) 
+table
+```
+
+## `Multiple` Line
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+table %>% 
+  ggplot(aes(x=trac_month,y=Count,group=city,color=city)) +
+  geom_line() + geom_point() + thm() + 
+  labs(x = "交易月份" , y = "交易數量")
+```
+
+
+## 小挑戰
+
+- 計算臺北市&高雄市不同屋齡的交易量，並畫出 `Multiple` Line plot
+- 如下圖：
+
+```{r,echo=FALSE}
+data %>% 
+  filter(city == "臺北市" | city == "高雄市" ) %>% 
+  group_by(city,age) %>% 
+  summarise(Count = n()) %>% 
+  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  geom_line() + geom_point() + thm()
+```
+
+## 參考答案 (有發現什麼問題嗎？！)
+
+```{r,echo=TRUE}
+data %>% 
+  filter(city == "臺北市" | city == "高雄市" ) %>% 
+  group_by(city,age) %>% 
+  summarise(Count = n()) %>% 
+  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  geom_line() + geom_point() + thm()
+```
+
+## 調整 x 軸的 scale 再看一次
+
+- EDA的價值之一就是找出資料中的`不合理`
+
+```{r}
+data %>% 
+  filter(city == "臺北市" | city == "高雄市" ) %>% 
+  group_by(city,age) %>% 
+  summarise(Count = n()) %>% 
+  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  geom_line() + geom_point() + thm() + coord_cartesian(xlim = c(-3, 10))
+```
+
+# 單一數值：Histogram
+
+## `geom_histogram`
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=age, y =..count..)) + 
+  geom_histogram()
+```
+
+## Histogram
+
+- `aes(y=..count..)` vs. `aes(y=..density..)`
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=age, y =..density..)) + 
+  geom_histogram()
+```
+
+## Histogram
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=age, y =..density.., fill =..count..)) + # fill 依指定欄位填色
+  geom_histogram(binwidth=.5) 
+```
+
+## Histogram + density
+
+- `geom_histogram()` + `geom_density()`
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+data %>% 
+  ggplot(aes(x=age,y=..density..)) + 
+  geom_histogram(color="black", fill="white") +
+  geom_density(alpha=.2, fill="#FF6666") # alpha設定透明度
+```
+
+# 量化 v.s. 量化：Scatter Plot
+
+## Scatter plot
+
+- `geom_point`
+
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+iris %>% 
+  ggplot(aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
+  geom_point(shape=1, size=2) # shape控制圖示；size控制點的大小
+```
+
+## point shape types in `ggplot2`
+
+<center>
+<img src='img/point_shape_types.png' style='height: 500px' align="middle"></img></center>
+
+## Scatter plot
+
+- 參數放在 aes() 函數裡面，表示資料依據指定欄位內容做不同的shape/size變化
+```{r,warning=FALSE,fig.align='center', message=FALSE}
+iris %>% 
+  ggplot(aes(x=Sepal.Length, y=Petal.Length, color=Species, shape = Species, size = Species)) + 
+  geom_point() + scale_shape_manual(values=c(1,5,7)) +  # 控制 shape 顯示圖示
+  scale_size_manual(values=c(1,2,3))   # 控制圖示 size 顯示大小
+```
+
+## 插播
+
+```{r ecoh = TRUE,eval=FALSE}
+install.packages("devtools")
+```
+
+<center>
+<img src='img/devtools.png' width=750 align='center'></img>
+</center>
+
+- [插播ggthemr](https://github.com/cttobin/ggthemr)
+
+## 小挑戰
+
+- 士林區,文山區,信義區三個區域的**套房(1房1廳1衛)**在屋齡與單位尺價存在著怎樣的特性？
+
+```{r,echo=FALSE}
+library(ggthemr)
+ggthemr('flat')
+
+data %>% 
+  filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
+  filter(build_type == "套房(1房1廳1衛)") %>% 
+  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  thm()
+```
+
+## 參考答案
+
+```{r}
+library(ggthemr)
+ggthemr('flat')
+ans = data %>% 
+  filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
+  filter(build_type == "套房(1房1廳1衛)") %>% 
+  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  thm() 
+ans
+```
+
+# HeatMap 
+
+## 相關性熱圖
+
+- 通常我們會好奇變數與變數之間是不是存在著相關性
+- 在統計學上有一種簡單的方式去計算變數間的關係指標，我們稱之為相關係數係數！
+- 以下將以 iris 資料做為示範，用熱圖來呈現
+
+```{r}
+# 挑出前四欄位
+dat <- iris %>% 
+  select(1:4) 
+dat %>% 
+  head()
+```
+
+## `寬轉長` 計算相關性
+
+```{r}
+p = dat %>%
+  cor() %>% 
+  as.data.frame() %>% 
+  mutate(names = row.names(.)) %>% 
+  gather(class,cor,1:4) 
+p %>% head(10)
+```
+
+## Heatmap的好處
+
+- 藉由 Heatmap ，快速地看出變數之間的關聯程度
+
+```{r}
+p %>% 
+  ggplot(aes(x=names, y=class, fill= cor)) +
+  geom_tile() + labs(x = "", y = "") + 
+  scale_fill_gradient2(limits=c(-1, 1))
+```
+
+# 進階技巧
+
+## `stat`istics
+
+- Fit regression line
+
+```{r}
+library(ggthemr)
+ggthemr('flat')
+iris %>% 
+  ggplot(aes(x = Sepal.Length, y = Petal.Length)) + 
+  geom_point() +
+  stat_smooth(method=lm, level=.95) # add se=FALSE to disable CI
+```
+
+## `facet`
+
+- 比較各縣市在各月份下的交易量
+
+```{r echo = TRUE,fig.height=3.2}
+table <- data %>% 
+  group_by(city,trac_month) %>% # 選擇縣市、交易月份作為分群
+  summarise(total = n()) # 計算分群下的總數
+table %>% 
+  ggplot(aes(x = trac_month, y = total ,fill = city))+
+    geom_bar(stat='identity') + thm()
+```
+
+## `facet`
+
+```{r,fig.height=4}
+table %>% 
+  ggplot(aes(x = trac_month, y = total ,fill = city))+
+    geom_bar(stat='identity') + thm() +
+    facet_wrap( ~city , nrow = 2) +
+    labs(x = "交易月份" ,y="交易量")
+```
+
+## `coord`_flip()
+
+```{r,fig.height=4}
+table %>% 
+  ggplot(aes(x = trac_month, y = total ,fill = city)) + 
+  geom_bar(stat='identity') + thm() +facet_wrap( ~ city , nrow = 2)+
+  labs(x = "交易月份" ,y="交易量") + coord_flip() 
+```
+
+
+## 圖形輸出
+
+- 利用 RStudio UI 介面存擋
+- 畫完圖之後，再存檔~~
+
+```{r echo=TRUE,eval=FALSE}
+ggsave('檔案名稱')
+ggsave("plot.pdf", width = 4, height = 4)
+ggsave("plot.png", width = 4, height = 4, dpi = 300)
+```
+
+# 互動式視覺化呈現
+
+## package：`Plotly`
+
+- Plotly是一個資料視覺化的R套件，以簡單的方式，讓資料能夠產生互動的效果。
+- 提供一個合作平台，使用者能夠將自己在R中繪製的圖存上屬於自己的Plotly平台上。
+- [Plotly官方網站](https://plot.ly/)
+- 結合了各式各樣的API，包裝`Python`、`R`、`Malab`、...等等
+
+>- 當然～ggplot2也能夠輕易地使用plotly轉換成互動式的圖表！！
+
+## 套件安裝
+
+- 直接從`CRAN`內下載
+
+```{r echo=TRUE,eval=FALSE}
+# Plotly is now on CRAN!
+install.packages("plotly")
+# install the latest development version (on GitHub) via devtools
+```
+
+- `或是`從`github`上下載，但前提是`先`安裝`devtools`
+
+```{r echo=TRUE,eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("ropensci/plotly")
+```
+
+</br>
+
+- 安裝完，一樣別忘了要`library`！
+```{r}
+library(plotly)
+```
+
+## plot with `ggplot2`
+
+- 剛剛的小挑戰！？
+
+```{r ,warning=FALSE,fig.align='center', message=FALSE}
+ans = data %>% 
+  filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
+  filter(build_type == "套房(1房1廳1衛)") %>% 
+  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  thm() 
+ans
+```
+
+## plot with `ggplotly` & `Resize`
+
+- 是不是非常簡單？！
+
+```{r,warning=FALSE,fig.align='center', message=FALSE, fig.height=5}
+ggplotly(ans,height = 400,width = 1000)
+```
+
+## 學習資源
+
+- [ggplot2 cheat sheet from RStudio Inc.](http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+- [Graphs with ggplot2](http://www.cookbook-r.com/Graphs/)
+
+- [ggplot2 官方文件](http://docs.ggplot2.org/current/index.html)
+
+- [Rcolorbrewer調色盤](http://docs.ggplot2.org/current/scale_brewer.html)
+
+- [Plotly ggplot2 Library](https://plot.ly/ggplot2/)
+
+- [highcharter套件介紹](http://jkunst.com/highcharter/oldindex.html#shiny-integration)
+
+- [ggthemeassist外掛](https://github.com/calligross/ggthemeassist) 
+
+
+## 掌握心法後，如何自行利用 R 解決問題
+
+- 了解自己的需求，詢問關鍵字與函數
+
+- [Taiwan R User Group](http://www.meetup.com/Taiwan-R)
+
+- [ptt R_Language版](https://www.ptt.cc/bbs/R_Language/index.html)
+
+- [R軟體使用者論壇](https://groups.google.com/forum/#!forum/taiwanruser)
+
+- [StackOverflow](http://stackoverflow.com/) 
+
+- 歡迎來信 <leslie.li@dsp.im> 與我一起交流！
+
+
+## 本週作業
+
+### 請同學完成R語言翻轉系統以下章節：
+
+#### 必修
+
+- `03-RVisualization-03-ggplot2`
+
+#### 選修
+
+- `03-RVisualization-01-One-Variable-Visualization`
+- `03-RVisualization-02-Multiple-Variables-Visualization`
+- `03-RVisualization-04-Javascript-And-Maps`
+
+
+
+##  Thanks for listening
+
+- [How to read json file in r](https://unityculture.github.io/PIXNET_workshop/DataETL.html#13)
+
+<center>
+<img src='img/thx_1.png' width=850 align='center'></img>
+</center>
+
+
+
+
+
+
+
+
+
+

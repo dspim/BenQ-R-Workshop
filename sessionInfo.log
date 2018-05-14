@@ -1,0 +1,32 @@
+R version 3.4.1 (2017-06-30)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS High Sierra 10.13.3
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] DT_0.2          stringr_1.2.0   purrr_0.2.3     readr_1.1.1    
+ [5] tidyr_0.7.1     tibble_1.3.4    tidyverse_1.1.1 ggplot2_2.2.1  
+ [9] dplyr_0.7.2     xtable_1.8-2    magrittr_1.5    knitr_1.17     
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_0.12.16     cellranger_1.1.0 compiler_3.4.1   plyr_1.8.4      
+ [5] bindr_0.1        forcats_0.2.0    tools_3.4.1      digest_0.6.12   
+ [9] lubridate_1.6.0  jsonlite_1.5     evaluate_0.10.1  gtable_0.2.0    
+[13] nlme_3.1-131     lattice_0.20-35  pkgconfig_2.0.1  rlang_0.1.2     
+[17] psych_1.7.5      yaml_2.1.18      parallel_3.4.1   haven_1.1.0     
+[21] bindrcpp_0.2     xml2_1.1.1       httr_1.3.1       htmlwidgets_0.9 
+[25] hms_0.3          rprojroot_1.2    grid_3.4.1       glue_1.1.1      
+[29] R6_2.2.2         readxl_1.0.0     foreign_0.8-69   rmarkdown_1.6   
+[33] modelr_0.1.1     reshape2_1.4.2   backports_1.1.0  scales_0.5.0    
+[37] htmltools_0.3.6  rvest_0.3.2      assertthat_0.2.0 mnormt_1.5-5    
+[41] colorspace_1.3-2 stringi_1.1.5    lazyeval_0.2.0   munsell_0.4.3   
+[45] broom_0.4.2     

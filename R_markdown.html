@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Introduction to R markdown</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2018-06-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Introduction to R markdown',
+                        subtitle: 'Dynamic documents for R',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'DSP作者群 <span class="citation">@BenQ</span> Workshop' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="R_markdown_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="R_markdown_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="R_markdown_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="R_markdown_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="R_markdown_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="css/dsp.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2018-06-21</p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>What does data analyst do</h2></hgroup><article  id="what-does-data-analyst-do">
+
+<center>
+
+<img src='img/analyst.png' style='max-width: 67%;max-height: 67%'></img><br/><small><a href='http://goo.gl/52THNf' title=''>http://goo.gl/52THNf</a></small>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>What does data analyst actually do</h2></hgroup><article  id="what-does-data-analyst-actually-do">
+
+<center>
+
+<img src='img/ResearchPipeline.png' style='max-width: 84%;max-height: 84%'></img><br/><small><a href='https://www.coursera.org/course/repdata' title=''>https://www.coursera.org/course/repdata</a></small>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>Why you need R Markdown</h2></hgroup><article  id="why-you-need-r-markdown">
+
+<div style="float:right; margin: 200px;">
+<p><img src='img/one1.jpg' style='height: 250px'></img></p></div>
+
+<ul>
+<li><strong>資料分析</strong>做不完<br><br/></li>
+<li><strong>說明文件</strong>沒空寫<br><br/></li>
+<li><strong>教授</strong>要求換方法<br><br/></li>
+<li><strong>老闆</strong>說要改流程<br><br/></li>
+<li><strong>客戶</strong>要我做做看<br><br/></li>
+<li>年度報告要總結<br></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Why you need R Markdown</h2></hgroup><article  id="why-you-need-r-markdown-1">
+
+<center>
+
+<img src='img/zikannai2.png' style='max-width: 100%;max-height: 100%'></img><br/><small><a href='http://goo.gl/YiJrlI' title=''>http://goo.gl/YiJrlI</a></small>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>What is R Markdown</h2></hgroup><article  id="what-is-r-markdown">
+
+<p>A convenient tool to generate reproducible document.</p>
+
+<ul>
+<li><a href='http://daringfireball.net/projects/markdown/basics' title=''>Markdown</a>
+
+<ul>
+<li>Lightweight markup language</li>
+<li>Remove HTML tag for higher readibility.</li>
+<li>Inline HTML is avaliable.</li>
+</ul></li>
+<li>R markdown
+
+<ul>
+<li>Markdown + embedded R code chunks</li>
+<li>(.Rmd) -&gt; (.md) -&gt; (.html, .docx, .pdf)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Why R Markdown</h2></hgroup><article  id="why-r-markdown">
+
+<ul>
+<li>製作reproducible的報告、投影片: <code>document</code> 、 <code>slides</code></li>
+<li>想寫數學式子好展現自己的專業 \(e=mc^2\): <code>mathjax</code></li>
+<li>只有一份source code，不需要額外複製圖片到報告中: <code>.rmd</code></li>
+<li>需求更改時，可以動態改變報告內容: <code>integrated shiny</code></li>
+<li>增加資料分析演算法的可讀性: <code>code and text</code></li>
+<li>HTML的報告和投影片的格式方便瀏覽: <code>html</code></li>
+<li>IDE? RStudio提供支援: <code>Knit Button</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Installation</h2></hgroup><article  id="installation">
+
+<ul>
+<li>最新版的RStudio已經包含R Markdown功能<br/></li>
+<li>你也可以透過以下指令安裝R Markdown套件：</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;rmarkdown&quot;)</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>R Markdown 快速導覽</h2></hgroup><article  id="r-markdown-">
+
+</article></slide><slide class=''><hgroup><h2>Overview</h2></hgroup><article  id="overview">
+
+<center>
+
+<img src='img/RmdOverview.png' style='max-width: 77%;max-height: 77%'></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>Markdown</h2></hgroup><article  id="markdown">
+
+<center>
+
+<img src='img/markdownOverview.png' style='max-width: 200%;max-height: 200%'></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>R Code Chunks</h2></hgroup><article  id="r-code-chunks">
+
+<center>
+
+<img src='img/markdownChunk.png' style='max-width: 70%;max-height: 70%'></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>Inline R Code</h2></hgroup><article  id="inline-r-code">
+
+<ul>
+<li>利用 `r` 在markdown中插入R程式</li>
+</ul>
+
+<pre >- 這是DSP推出的第 `ｒ 3+1`門課程  </pre>
+
+<ul>
+<li>這是DSP推出的第 4門課程</li>
+</ul>
+
+<pre >- 鳶尾花資料集(iris dataset)有 `ｒ levels(iris$Species)` 等種類，
+  總共有 `ｒ length(levels(iris$Species))` 種</pre>
+
+<ul>
+<li>鳶尾花資料集(iris dataset)有 setosa, versicolor, virginica 等種類，<br/>總共有 3 種</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Inline R Equations</h2></hgroup><article  id="inline-r-equations">
+
+<ul>
+<li>插入 LaTeX 公式的方法：<br/></li>
+<li>行內<code>$ equation $</code><br/></li>
+<li>段落 <code>$$ equation $$</code></li>
+</ul>
+
+<pre >熵指標的公式為 $-\sum{p_i \log{p_i}}$ ，表示系統的亂度  </pre>
+
+<p>熵指標的公式為 \(-\sum{p_i \log{p_i}}\) ，表示系統的亂度</p>
+
+<pre >請計算高斯分佈 $$f(x;\mu,\sigma^2) = \frac{1}{\sigma\sqrt{2\pi}} 
+e^{ -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 }$$  </pre>
+
+<p>請計算高斯分佈 \[f(x;\mu,\sigma^2) = \frac{1}{\sigma\sqrt{2\pi}} e^{ -\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 }\]</p>
+
+</article></slide><slide class=''><hgroup><h2>Rendering Output</h2></hgroup><article  id="rendering-output">
+
+<ul>
+<li>RStudio: &quot;Knit&quot; command:
+
+<ul>
+<li>(Win:Ctrl+Shift+K / OSX:Command+Shirt+K)<br/></li>
+</ul></li>
+<li>Command line: rmarkdown::render function</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>rmarkdown::render(&quot;input.Rmd&quot;)</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Markdown Basics</h2></hgroup><article  id="markdown-basics">
+
+</article></slide><slide class=''><hgroup><h2>Markdown Quick Reference</h2></hgroup><article  id="markdown-quick-reference">
+
+在RStudio中，在UI界面中點選<code>help (?)</code>可以查閱Markdown語法<br/>
+
+<center>
+
+<img src='img/MdRef.png' style='max-width: 75%;max-height: 75%'></img>
+
+</center>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>R Code Chunks</h2></hgroup><article  id="r-code-chunks-1">
+
+</article></slide><slide class=''><hgroup><h2>Overview</h2></hgroup><article  id="overview-1">
+
+<p>R code will be evaluated and printed</p>
+
+<pre class="markdown"><code>&#96;&#96;&#96;{r}
+summary(cars$dist)
+&#96;&#96;&#96;
+</code></pre>
+
+<pre class = 'prettyprint lang-r'>summary(cars$dist)</pre>
+
+<pre >   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      2      26      36      43      56     120 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Overview (cont.)</h2></hgroup><article  id="overview-cont.">
+
+draw graphics
+
+<pre class="markdown"><code>&#96;&#96;&#96;{r}
+plot(women)
+&#96;&#96;&#96;
+</code></pre>
+
+<pre class = 'prettyprint lang-r'>plot(women)  </pre>
+
+<p><img src="R_markdown_files/figure-html/plot1-1.png" width="768" /></p>
+
+</article></slide><slide class=''><hgroup><h2>Named R code chunk.</h2></hgroup><article  id="named-r-code-chunk.">
+
+<pre class="markdown"><code>&#96;&#96;&#96;{r plot}
+summary(cars)
+plot(cars)
+&#96;&#96;&#96;
+</code></pre>
+
+<ul>
+<li>Easy Navigation in RStudio</li>
+</ul>
+
+<p><img src='img/chunk_name.png' style='max-width: 70%;max-height: 70%'></img></p>
+
+</article></slide><slide class=''><hgroup><h2>Basic Chunk Options</h2></hgroup><article  id="basic-chunk-options">
+
+<ul>
+<li><code>echo</code>(TRUE): whether to include R source code in the output file<br/></li>
+<li><code>eval</code>(TRUE): whether to evaluate the code chunk<br/></li>
+<li><code>message</code>(TRUE): whether to preserve messages emitted by message()<br/></li>
+<li><code>results</code>(&#39;hide&#39;,&#39;asis&#39;): hide output ; asis treats the output of your R code as literal Markdown (when using like kable function)<br/><br></li>
+<li><code>include</code>(TRUE): whether to be written into the output document, but the code is still evaluated and plot files are generated<br/></li>
+<li><code>warning</code>(TRUE): whether to preserve warnings in the output</li>
+<li><code>comment</code>(&quot;##&quot;): set to comment notation</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Basic Chunk Options (cont.)</h2></hgroup><article  id="basic-chunk-options-cont.">
+
+<p>Set global chunk options at code chunks header:</p>
+
+<pre class = 'prettyprint lang-r'>knitr::opts_chunk$set(echo=FALSE, results=&#39;hide&#39;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise：</h2></hgroup><article  id="exercise">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。<a href='https://dspim.github.io/A1-basic-data-analysis/RMD-example/RmdExAns.html' title=''>範例</a><br/>* <a href='http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm' title=''>原始出處</a><br/>* <a href='https://github.com/dspim/a1-basic-data-analysis-course/blob/master/RmdExQue.Rmd' title=''>參考範本</a><br/>* <a href='https://github.com/dspim/a1-basic-data-analysis-course/blob/master/data/weather-utf8.csv' title=''>範例資料</a></p>
+
+</article></slide><slide class=''><hgroup><h2>Exercise: Original：</h2></hgroup><article  id="exercise-original">
+
+<p><img src='img/forecast_tpe1.png' style='max-width: 100%;max-height: 100%'></img></p>
+
+</article></slide><slide class=''><hgroup><h2>Exercise: After：</h2></hgroup><article  id="exercise-after">
+
+<p><img src='img/exam_q1.png' style='max-width: 60%;max-height: 60%'></img></p>
+
+</article></slide><slide class=''><hgroup><h2>Exercise Q1</h2></hgroup><article  id="exercise-q1">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 計算01/28日當日的最高溫與最低溫度</p>
+
+<pre class = 'prettyprint lang-r'># Hint：
+# 1. 下載weather-utf8.csv到自己的電腦上
+# 2. 在R chunk中，利用read.csv()讀取檔案進行分析
+  #  Windows: read.csv(,fileEncoding=&quot;UTF-8&quot;)
+# 3. 找出01/28當日最高溫 max()
+# 4. 找出01/28當日最低溫 min()
+# 5. use inline R chunk `r max(...)` </pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise A1</h2></hgroup><article  id="exercise-a1">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 計算01/28日當日的最高溫與最低溫度</p>
+
+<pre class = 'prettyprint lang-r'># Hint for Linux &amp; Mac：
+dat &lt;- read.csv(&quot;data/weather-utf8.csv&quot;) 
+max(dat[1:2, 4:5])
+min(dat[1:2, 4:5])
+# 預測高溫約`r max(dat[1:2,4:5])`度，低溫約`r min(dat[1:2,4:5])`度</pre>
+
+<pre class = 'prettyprint lang-r'># Hint for Windows：
+dat &lt;- read.csv(&quot;data/weather-utf8.csv&quot;, fileEncoding=&quot;UTF-8&quot;) 
+max(dat[1:2, 4:5])
+min(dat[1:2, 4:5])
+# 預測高溫約`r max(dat[1:2,4:5])`度，低溫約`r min(dat[1:2,4:5])`度</pre>
+
+</article></slide><slide class=''><hgroup><h2>Table Output</h2></hgroup><article  id="table-output">
+
+<ul>
+<li>Print data directly:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>print(head(women))</pre>
+
+<pre >  height weight
+1     58    115
+2     59    117
+3     60    120
+4     61    123
+5     62    126
+6     63    129</pre>
+
+</article></slide><slide class=''><hgroup><h2>Table Output (cont.)</h2></hgroup><article  id="table-output-cont.">
+
+<ul>
+<li>Using <code>knitr::kable</code> :
+
+<ul>
+<li>Set <code>results=&#39;asis&#39;</code> to write raw results from R into the output document<br/>
+
+<pre class="markdown"><code>&#96;&#96;&#96;{r, results='asis'}
+  knitr::kable(women)
+  &#96;&#96;&#96;
+  </code></pre></li>
+</ul></li>
+</ul>
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="right">height</th>
+<th align="right">weight</th>
+</tr>
+<tr class="odd">
+<td align="right">58</td>
+<td align="right">115</td>
+</tr>
+<tr class="even">
+<td align="right">59</td>
+<td align="right">117</td>
+</tr>
+<tr class="odd">
+<td align="right">60</td>
+<td align="right">120</td>
+</tr>
+<tr class="even">
+<td align="right">61</td>
+<td align="right">123</td>
+</tr>
+<tr class="odd">
+<td align="right">62</td>
+<td align="right">126</td>
+</tr>
+<tr class="even">
+<td align="right">63</td>
+<td align="right">129</td>
+</tr>
+</table>
+
+</article></slide><slide class=''><hgroup><h2>Exercise Q2</h2></hgroup><article  id="exercise-q2">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 製作未來七天天氣預報表</p>
+
+<pre class = 'prettyprint lang-r'># Hint：
+# 你可能需要dplyr套件
+# 可以先用filter把白天、晚上分開處理
+# 利用 paste(低溫,高溫,sep=&quot;-&quot;) 來製作溫度區間, i.e. 16-17
+# 利用colnames, rownames來對整理好的資料表的行與列命名</pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise A2</h2></hgroup><article  id="exercise-a2">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 製作未來七天天氣預報表</p>
+
+<pre class = 'prettyprint lang-r'>library(dplyr)
+day1 &lt;- filter(dat, 早晚==&quot;白天&quot;)
+day2 &lt;- mutate(day1, 溫度=paste(高溫,低溫,sep=&quot;-&quot;))
+day3 &lt;- select(day2, 天氣, 溫度)
+
+night1 &lt;- filter(dat, 早晚==&quot;晚上&quot;)
+night2 &lt;- mutate(night1, 溫度=paste(高溫,低溫,sep=&quot;-&quot;))
+night3 &lt;- select(night2, 天氣, 溫度)
+
+out &lt;- data.frame(t(bind_cols(day3, night3)))
+colnames(out) &lt;- day1$日期
+rownames(out) &lt;- c(&quot;白天天氣&quot;,&quot;白天溫度&quot;,&quot;晚上天氣&quot;,&quot;晚上溫度&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise A2 (conti.)</h2></hgroup><article  id="exercise-a2-conti.">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 製作未來七天天氣預報表</p>
+
+<pre class="prettyprint lang-r"><code>&#96;&#96;&#96;{r results='asis', echo=FALSE}
+knitr::kable(out)
+&#96;&#96;&#96;</code></pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise Q3</h2></hgroup><article  id="exercise-q3">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 製作未來七天天氣預報圖</p>
+
+<pre class = 'prettyprint lang-r'># Hint：
+# 你可能需要ggplot2套件
+# Mac顯示中文需設置字型
+  # http://equation85.github.io/blog/graph-font-of-r-in-mac-os-x/
+  # par(family=&#39;STHeiti&#39;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise A3</h2></hgroup><article  id="exercise-a3">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。 - 製作未來七天天氣預報圖</p>
+
+<pre class = 'prettyprint lang-r'>library(ggplot2);library(reshape2)
+dat1 &lt;- mutate(dat, 時間=paste(日期,早晚,sep=&quot;\n&quot;))
+dat2 &lt;- select(dat1, 時間, 高溫, 低溫)
+colnames(dat2)[1] &lt;- &quot;時間&quot; # for Windows user
+dat3 &lt;- melt(dat2)
+g &lt;- ggplot(dat3, aes(x=時間, y=value, group=variable, colour=variable)) + 
+  geom_line() + 
+  labs(x=&quot;時間&quot;, y=&quot;溫度&quot;) </pre>
+
+<pre class = 'prettyprint lang-r'># 顯示中文字 Mac user only
+g + theme_gray(base_family=&quot;STHeiti&quot;) </pre>
+
+</article></slide><slide class=''><hgroup><h2>Exercise</h2></hgroup><article  id="exercise-1">
+
+<p>利用R Markdown 製作《一周天氣預報》書面報告。</p>
+
+<ul>
+<li><a href='http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm' title=''>原始出處</a></li>
+<li><a href='https://github.com/dspim/a1-basic-data-analysis-course/blob/master/RmdExQue.Rmd' title=''>參考範本</a></li>
+<li><a href='https://github.com/dspim/a1-basic-data-analysis-course/blob/master/data/weather-utf8.csv' title=''>範例資料</a></li>
+<li><a href='https://github.com/dspim/a1-basic-data-analysis-course/blob/master/RmdExAns.Rmd' title=''>參考解答</a></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Appendiex</h2></hgroup><article  id="appendiex">
+
+</article></slide><slide class=''><hgroup><h2>About Document Content</h2></hgroup><article  id="about-document-content">
+
+You can add R Markdown and HTML in the YAML content.
+
+<pre class="prettyprint lang-yaml"><code>
+---
+title: "Introduction to R Markdown"
+author: "DSP作者群 @BenQ Workshop"
+date: "2018-06-21"
+output: html_document
+---
+</code></pre>
+
+</article></slide><slide class=''><hgroup><h2>YAML metadata</h2></hgroup><article  id="yaml-metadata">
+
+<center>
+
+<img src='img/Cover.png' style='max-width: 80%;max-height: 80%'></img><br/>Cover by Wush
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>Some Useful HTML</h2></hgroup><article  id="some-useful-html">
+
+<ul>
+<li><p><a href='http://www.w3schools.com/tags/tag_iframe.asp' title=''>iframe</a>: displaying a web page within a web page</p>
+
+<pre class = 'prettyprint lang-html'>&lt;iframe src=&quot;http://dsp.im/&quot; height=600 width=800&gt;&lt;/iframe&gt;</pre></li>
+<li><p><a href='http://www.w3schools.com/tags/tag_img.asp' title=''>img</a>: inserting images into an HTML document. Much easier for adjusting width and height.</p>
+
+<pre class = 'prettyprint lang-html'>&lt;img src=&quot;img/dsp-logo.png&quot; alt=&quot;logo&quot;&gt;</pre>
+
+<p><img src="img/dsp-logo.png" alt="logo"></p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Interactive Documents</h2></hgroup><article  id="interactive-documents">
+
+It’s possible to embed a Shiny application within a document.
+
+<div style="float: left; width: 50%;">
+<p><img src='img/shiny-cars-table.gif' style='max-width: 90%;max-height: 90%'></img></p></div>
+
+<div style="float: right; width: 50%;">
+<p><img src='img/shiny-hist-plot.gif' style='max-width: 90%;max-height: 90%'></img></p></div>
+
+</article></slide><slide class=''><hgroup><h2>Publish to the web</h2></hgroup><article  id="publish-to-the-web">
+
+<p>Using R packages::slidify to publish your slides to the web</p>
+
+<pre >library(slidify)
+publish_github(&quot;repo&quot;, username=&quot;user_name&quot;)
+publish_rpubs(&quot;title&quot;,&quot;file_name.html&quot;)
+publish_dropbox(dir_name)
+publish_gist(&quot;title&quot;,file=&quot;file_name.html&quot;,publish=TRUE)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Publish to the web: Github</h2></hgroup><article  id="publish-to-the-web-github">
+
+<ol>
+<li>sign up or login in Github.com at browser</li>
+<li>find button: New repository to add new one.</li>
+<li>select a name for repository, then created.</li>
+<li>the link of your new repository would be like:<br/><a href='https://github.com/your_name/repo_name.git' title=''>https://github.com/&quot;your_name&quot;/&quot;repo_name&quot;.git</a></li>
+<li>find Settings in your profile at top-right corner</li>
+<li>select SSH Keys and add SSH Key</li>
+<li>upload your SSH key which created by your own PC/notebook.</li>
+<li>at RStudio, using Rcommand:<br/>slidify::publish_github(&quot;repo_name&quot;, username=&quot;your_name&quot;)</li>
+<li>your new page will be ready in 5~10 min and link:<br/><a href='https://your_name.github.io/repo_name/index.html' title=''>https://&quot;your_name&quot;.github.io/&quot;repo_name&quot;/index.html</a></li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>References</h2></hgroup><article  id="references">
+
+<ul>
+<li><a href='http://mansunkuo.github.io/rmd_tutorial/' title=''>An Introduction to R Markdown*</a> by Mansun Kuo @ <a href='http://taiwanrusergroup.github.io/DSC2014Tutorial/' title=''>DSC2014</a></li>
+<li><a href='http://shiny.rstudio.com/articles/rm-cheatsheet.html' title=''>R Markdown Cheat Sheet</a></li>
+<li><a href='http://rmarkdown.rstudio.com/' title=''>R Markdown</a></li>
+<li><a href='http://yihui.name/knitr/' title=''>knitr</a></li>
+<li><a href='https://support.rstudio.com/hc/en-us/categories/200035113-Documentation' title=''>RStudio Documentation</a></li>
+<li><a href='https://www.coursera.org/course/repdata' title=''>Reproducible Research</a></li>
+<li><a href='http://shiny.rstudio.com/articles/' title=''>Shiny Articles</a></li>
+<li><a href='http://slidify.org/publish.html' title=''>Publish to Github Pages/Dropbox/Rpubs</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Wush 教學影片</h2></hgroup><article  id="wush-">
+
+<p><a href='https://www.youtube.com/watch?v=P97udK2ktuY' title=''>Slidify簡介</a> by Wush Wu<br/><a href='https://www.youtube.com/watch?v=P97udK2ktuY' title=''>https://www.youtube.com/watch?v=P97udK2ktuY</a></p>
+
+<p><a href='https://www.youtube.com/watch?v=OHKZLeKlUsM' title=''>20121203 MLDM Monday:markdown + knitr (Hangout 轉播)</a> by Wush Wu<br/><a href='https://www.youtube.com/watch?v=OHKZLeKlUsM' title=''>https://www.youtube.com/watch?v=OHKZLeKlUsM</a></p></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

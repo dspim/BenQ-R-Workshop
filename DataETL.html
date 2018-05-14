@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>資料清理與轉換</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2018-06-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: '資料清理與轉換',
+                        subtitle: 'Data Extract, Transform and Load',
+                useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'DSP作者群 <span class="citation">@BenQ</span> Workshop' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <link href="DataETL_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="DataETL_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="DataETL_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="DataETL_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="DataETL_files/ioslides-13.5.1/js/slide-deck.js"></script>
+  <script src="DataETL_files/htmlwidgets-0.9/htmlwidgets.js"></script>
+  <script src="DataETL_files/jquery-1.12.4/jquery.min.js"></script>
+  <script src="DataETL_files/datatables-binding-0.2/datatables.js"></script>
+  <link href="DataETL_files/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="DataETL_files/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
+  <script src="DataETL_files/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
+  <link href="DataETL_files/dt-ext-fixedcolumns-1.10.12/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+  <script src="DataETL_files/dt-ext-fixedcolumns-1.10.12/js/dataTables.fixedColumns.min.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="css/dsp.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2018-06-06</p>
+          </hgroup>
+  </slide>
+
+<slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data ETL 課程大綱</h2></hgroup><article  id="data-etl-">
+
+</article></slide><slide class=''><hgroup><h2>Agenda</h2></hgroup><article  id="agenda">
+
+<ul>
+<li>Data Input / Output：<strong>學會</strong> 讀取不同種的資料格式與輸出。</li>
+<li>Data Manipulation：<strong>學會</strong> 如何將資料操之在手。</li>
+<li>Data Aggregation： <strong>學會</strong> 如何彙總出你有興趣的數字。</li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data I/O：表格型文件的輸入與輸出</h2></hgroup><article  id="data-io">
+
+</article></slide><slide class=''><hgroup><h2>在讀檔案之前，先了解路徑的種類</h2></hgroup><article >
+
+<p>路徑分為兩種：</p>
+
+<ul>
+<li>絕對路徑：一般大家所認知的路徑長相。</li>
+<li>相對路徑：從 <code>working directory(工作目錄) 開始尋找</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>## 查看目前 Working directory 在哪個位置
+getwd()
+## 查看該工作目錄底下有什麼檔案
+dir()
+## 更改、設定工作目錄位置
+# setwd(&#39;這邊放路徑&#39;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>輸入表格檔案(1/3)</h2></hgroup><article  id="13">
+
+<ul>
+<li><a href='https://raw.githubusercontent.com/unityculture/PIXNET_workshop/master/data/transaction.csv' title=''>下載範例資料</a></li>
+<li>利用<code>read.csv</code> 讀取 <code>csv</code> 檔 (一種以逗點分隔欄位的資料格式)<br/></li>
+<li>路徑必須指到下載的位置</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>############### 絕對路徑 ###############
+# 請輸入完整的檔案路徑
+transaction &lt;- read.csv(&quot;/Users/sheng/Desktop/data/transaction.csv&quot;) #如果你是mac
+transaction &lt;- read.csv(&quot;C:\\Users\\transaction.csv&quot;) #如果你是windows 
+############### 相對路徑 ###############
+# 設定我們檔案存放的路徑
+setwd() 
+# 讀檔起手式
+transaction &lt;- read.csv(&quot;transaction.csv&quot;) 
+# 若讀入的是亂碼，猜猜看以下兩種編碼 utf-8 and big5
+transaction &lt;- read.csv(&quot;transaction.csv&quot;,fileEncoding = &#39;big5&#39;)
+transaction &lt;- read.csv(&quot;transaction.csv&quot;,fileEncoding = &#39;utf-8&#39;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>輸入表格檔案(2/3)</h2></hgroup><article  id="23">
+
+<p>看看資料輸入後的結果有沒有問題:</p>
+
+<pre class = 'prettyprint lang-r'>transaction &lt;- read.csv(&quot;data/transaction.csv&quot;)
+head(transaction)</pre>
+
+<center>
+
+<img src = 'img/head_data.jpg' width = 85%>
+
+</center>
+
+<p>. . .</p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div style="float:left;width:48%;">
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">英文欄位名稱</th>
+<th align="left">中文欄位名稱</th>
+</tr>
+<tr class="odd">
+<td align="left">city</td>
+<td align="left">縣市</td>
+</tr>
+<tr class="even">
+<td align="left">district</td>
+<td align="left">鄉鎮市區</td>
+</tr>
+<tr class="odd">
+<td align="left">trac_year</td>
+<td align="left">交易年份</td>
+</tr>
+<tr class="even">
+<td align="left">trac_month</td>
+<td align="left">交易月份</td>
+</tr>
+<tr class="odd">
+<td align="left">trac_type</td>
+<td align="left">交易標的</td>
+</tr>
+<tr class="even">
+<td align="left">trac_content</td>
+<td align="left">交易筆棟數</td>
+</tr>
+<tr class="odd">
+<td align="left">use_type</td>
+<td align="left">使用分區或編定</td>
+</tr>
+</table></div>
+
+<div style="float:right;width:50%;">
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">英文欄位名稱</th>
+<th align="left">中文欄位名稱</th>
+</tr>
+<tr class="odd">
+<td align="left">build_type</td>
+<td align="left">建物型態</td>
+</tr>
+<tr class="even">
+<td align="left">build_ymd</td>
+<td align="left">建築完成年月</td>
+</tr>
+<tr class="odd">
+<td align="left">area_land</td>
+<td align="left">土地移轉總面積.平方公尺.</td>
+</tr>
+<tr class="even">
+<td align="left">area_build</td>
+<td align="left">建物移轉總面積.平方公尺.</td>
+</tr>
+<tr class="odd">
+<td align="left">area_park</td>
+<td align="left">車位移轉總面積.平方公尺.</td>
+</tr>
+<tr class="even">
+<td align="left">price_total</td>
+<td align="left">總價.元.</td>
+</tr>
+<tr class="odd">
+<td align="left">price_unit</td>
+<td align="left">單價.元.平方公尺.</td>
+</tr>
+</table></div>
+
+</article></slide><slide class=''><hgroup><h2>輸入表格檔案(3/3)</h2></hgroup><article  id="33">
+
+<p>若是資料不如 <code>csv</code> 檔以 <code>,</code> 做分隔呢？</p>
+
+<p><code>read.table()</code>可以解決上述的問題，透過<code>?read.table()</code>可以查看其中可以調整的參數。注意到<code>sep =</code>是指定要輸入的資料是用什麼符號做分隔，當 <code>read.table()</code> 的 <code>sep = &#39;,&#39;</code>時，跟 <code>read.csv()</code> 是相同的。</p>
+
+<pre class = 'prettyprint lang-r'>transaction &lt;- read.csv(&quot;data/transaction.csv&quot;)
+transaction &lt;- read.table(&quot;data/transaction.csv&quot;, sep = &#39;,&#39;, header = T)</pre>
+
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (1/4)</h2></hgroup><article  id="json-14">
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;jsonlite&quot;)</pre>
+
+<center>
+
+<img src = 'img/csvtojson.jpg' height = 400>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (2/4)</h2></hgroup><article  id="json-24">
+
+<ul>
+<li><code>fromJSON</code>: 將 <code>JSON</code> 轉換成 Factor, DataFrame, Matrix 等格式，<code>?fromJSON</code> 查詢。</li>
+<li><code>toJSON</code>: <code>?toSON</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>json &lt;-
+&#39;[
+  {&quot;Name&quot; : &quot;Mario&quot;, &quot;Age&quot; : 32, &quot;Occupation&quot; : &quot;Plumber&quot;},
+  {&quot;Name&quot; : &quot;Peach&quot;, &quot;Age&quot; : 21, &quot;Occupation&quot; : &quot;Princess&quot;}
+]&#39;
+mydf &lt;- fromJSON(json)
+mydf</pre>
+
+<pre >   Name Age Occupation
+1 Mario  32    Plumber
+2 Peach  21   Princess</pre>
+
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (3/4)</h2></hgroup><article  id="json-34">
+
+<ul>
+<li>資料來源：<a href='https://github.com/pixnet/2016-pixnet-hackathon-recommendation' title=''>2016-pixnet-hackathon-recommendation</a></li>
+<li>資料長相：</li>
+</ul>
+
+<center>
+
+<strong>Hackthon dataset 是否為完整的 JSON file ？</strong>
+
+</center>
+
+<br>
+
+<center>
+
+<img src = 'img/pixnet_json.jpg' height = 300>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (4/4)</h2></hgroup><article  id="json-44">
+
+<ul>
+<li>方法：使用 <code>stream_in</code> 處理這種 <code>pseudo-JSON</code> 檔案</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>pixnet_json &lt;- stream_in(url(&quot;https://raw.githubusercontent.com/pixnet/2016-pixnet-hackathon-recommendation/master/data/sample_training.json&quot;))</pre>
+
+<pre class = 'prettyprint lang-r'>head(pixnet_json)</pre>
+
+<center>
+
+<img src = 'img/pixnet_json_read.jpg' height = 350>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>輸出表格檔案</h2></hgroup><article >
+
+<p>利用<code>write.csv</code>將<code>data.frame</code>格式的R物件另存成csv檔。為了效率，我們僅將 <code>head(data)</code> 6筆資料做輸出成 <code>transaction_head.csv</code> 即可。</p>
+
+<pre class = 'prettyprint lang-r'>write.csv(head(transaction), &quot;transaction_head.csv&quot;, row.names=FALSE,quote=FALSE)</pre>
+
+<center>
+
+<img src = 'img/writecsv.jpg' width = 60%>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>排解疑難 - 常見的讀取錯誤1</h2></hgroup><article  id="---1">
+
+<p>路徑錯誤</p>
+
+<pre class = 'prettyprint lang-r'>path &lt;- &quot;wrong_file_path&quot;
+dat &lt;- read.csv(file = path)</pre>
+
+<pre>
+Error in file(file, "rt") : 無法開啟連結
+此外: Warning message:
+  In file(file, "rt") : 無法開啟檔案 'wrong_file_path' ：No such file or directory
+</pre>
+
+<ul>
+<li>絕對路徑 -&gt; 確認檔案是否存在</li>
+<li>相對路徑 -&gt; 利用<code>getwd</code>了解 R 當下的路徑位置</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>排解疑難 - 常見的讀取錯誤2</h2></hgroup><article  id="---2">
+
+<p>格式錯誤</p>
+
+<pre class = 'prettyprint lang-r'>path &lt;- &quot;data/transaction.csv&quot;
+dat &lt;- read.csv(file = path, header = TRUE, sep = &quot;1&quot;)</pre>
+
+<pre>
+Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+  more columns than column names
+</pre>
+
+<ul>
+<li>利用<strong>其他編輯器</strong>確認分隔符號</li>
+<li>確認每列的資料的欄位是正確的</li>
+<li>必要時，請用其他文件編輯器校正欲讀取的檔案</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>排解疑難 - 常見的讀取錯誤3</h2></hgroup><article  id="---3">
+
+<p>編碼錯誤</p>
+
+<pre class = 'prettyprint lang-r'>url &lt;- &quot;http://johnsonhsieh.github.io/dsp-introR/data/dsp-gift-2013-big5/%E8%B2%B7%E8%B3%A3st_A_10109_10109.csv&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>dat &lt;- read.csv(url)</pre>
+
+<pre class="code">
+Error in make.names(col.names, unique = TRUE) : 
+  無效的多位元組字串於 <b6>m<c2><ed><a5><ab><b0><cf>
+</pre>
+
+<ul>
+<li>查詢檔案的編碼</li>
+<li>常見的中文編碼有<strong>UTF-8</strong>和<strong>BIG-5</strong></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># 利用`fileEncoding`參數選擇檔案編碼 - big5 / utf8
+dat2 &lt;- read.csv(url, fileEncoding = &quot;big5&quot;)</pre>
+
+</article></slide><slide class=''><hgroup><h2>讀取其他軟體資料集</h2></hgroup><article >
+
+<ul>
+<li>For SPSS and Stata datasets, use the <code>foreign</code> package</li>
+<li>Cars: <a href='http://calcnet.mth.cmich.edu/org/spss/V16_materials/DataSets_v16/Cars.sav' title=''>Cars.sav</a></li>
+<li>Milk Production: <a href='http://www.ats.ucla.edu/stat/stata/examples/chp/p004.dta' title=''>p004.dat</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># install.packages(&quot;foreign&quot;) # 安裝R套件 foreign
+library(foreign) # 載入套件 
+cars &lt;- read.spss(&quot;data/Cars.sav&quot;, to.data.frame = TRUE)
+milk &lt;- read.dta(&quot;data/p004.dta&quot;)
+# head(cars)
+# head(milk)</pre>
+
+</article></slide><slide class=''><hgroup><h2>讀取其他軟體資料集</h2></hgroup><article  id="-1">
+
+<ul>
+<li>For SAS datasets, use the <code>sas7bdat</code> package</li>
+<li>airline: <a href='http://www.principlesofeconometrics.com/sas/airline.sas7bdat' title=''>airline.sas7bdat</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># install.packages(&quot;sas7bdat&quot;)
+library(sas7bdat)
+airline &lt;- read.sas7bdat(&quot;data/airline.sas7bdat&quot;)</pre>
+
+<pre >Warning in strptime(x, format, tz = tz): unknown timezone &#39;zone/tz/2018c.
+1.0/zoneinfo/Asia/Taipei&#39;</pre>
+
+<pre class = 'prettyprint lang-r'>head(airline)</pre>
+
+<pre >  YEAR   Y    W    R   L    K
+1 1948 1.2 0.24 0.15 1.4 0.61
+2 1949 1.4 0.26 0.22 1.4 0.56
+3 1950 1.6 0.28 0.32 1.4 0.57
+4 1951 1.9 0.30 0.39 1.5 0.56
+5 1952 2.3 0.31 0.36 1.8 0.57
+6 1953 2.7 0.32 0.36 1.9 0.71</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data I/O：讀取網頁內容(Lite)</h2></hgroup><article  id="data-iolite">
+
+</article></slide><slide class=''><hgroup><h2>逐行輸入與輸出</h2></hgroup><article >
+
+<ul>
+<li><code>readLines</code>, <code>writeLines</code></li>
+<li>是讀取網頁原始碼的好工具</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>output &lt;- file(&quot;output.txt&quot;)
+writeLines(as.character(1:12), con = output)
+input &lt;- readLines(output)
+input</pre>
+
+<pre > [1] &quot;1&quot;  &quot;2&quot;  &quot;3&quot;  &quot;4&quot;  &quot;5&quot;  &quot;6&quot;  &quot;7&quot;  &quot;8&quot;  &quot;9&quot;  &quot;10&quot; &quot;11&quot; &quot;12&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>練習</h2></hgroup><article >
+
+<p>找出<a href='http://www.319papago.idv.tw/lifeinfo/chingshin/chingshin-02.html' title=''>清心福全</a>台北市南港店的地址</p>
+
+<pre class = 'prettyprint lang-r'>web_page &lt;- readLines(&quot;http://www.319papago.idv.tw/lifeinfo/chingshin/chingshin-02.html&quot;)
+# 如果你是windows, 這邊會遇到編碼問題，請加:
+# web_page &lt;- readLines(&quot;http://www.319papago.idv.tw/lifeinfo/chingshin/chingshin-02.html&quot;,encoding = &#39;UTF-8&#39;)
+matches &lt;- gregexpr(&quot;台北市南港區[\u4E00-\u9FA5|0-9]+&quot;, web_page)
+tmp &lt;- regmatches(web_page, matches)
+unlist(tmp) # 把 list 轉成 vector</pre>
+
+<pre >[1] &quot;台北市南港區南港路3段20號&quot;   &quot;台北市南港區南港路一段154號&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p>其中：</p>
+
+<pre >[\u4E00-\u9FA5]  ：表示所有中文字符
+|                 :表示 或
+[0-9]              ：含數字之字串
+[a]+             ：一或多個 a</pre>
+
+<p>此寫法為 <strong>正規表示法</strong>，後續將會在 <strong>字串處理</strong> 的主題中跟各位介紹。</p>
+
+</article></slide><slide class=''><hgroup><h2>小挑戰</h2></hgroup><article >
+
+<ul>
+<li>找出清心福全台北市門市的電話號碼</li>
+<li>提示：<code>&quot;02-[0-9]+&quot;</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>小挑戰</h2></hgroup><article  id="-1">
+
+<ul>
+<li>找出清心福全台北市門市的電話號碼</li>
+<li>提示：<code>&quot;02-[0-9]+&quot;</code></li>
+</ul>
+
+<h3>參考解答：</h3>
+
+<pre class = 'prettyprint lang-r'>web_page &lt;- readLines(&quot;http://www.319papago.idv.tw/lifeinfo/chingshin/chingshin-02.html&quot;)
+matches &lt;- gregexpr(&quot;02-[0-9]+&quot;, web_page)
+tmp &lt;- regmatches(web_page, matches)
+head(unlist(tmp))</pre>
+
+<pre >[1] &quot;02-28761717&quot; &quot;02-28311515&quot; &quot;02-28805757&quot; &quot;02-28829191&quot; &quot;02-28126988&quot;
+[6] &quot;02-28835757&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data I/O : 檢視資料</h2></hgroup><article  id="data-io-">
+
+</article></slide><slide class=''><hgroup><h2>Recap 一下 Data I/O 我們學了什麼？</h2></hgroup><article  id="recap--data-io-">
+
+<p><strong>Data ETL 的第一步：輸入資料</strong></p>
+
+<ul>
+<li>設定資料路徑：<code>getwd()</code> &amp; <code>setwd()</code></li>
+<li>輸入不同資料型態：
+
+<ul>
+<li>表格式： <code>read.csv()</code> &amp; <code>read.table()</code></li>
+<li>網頁： <code>readLines()</code></li>
+<li>其他軟體：<code>read.sas7bdat()</code> &amp; <code>read.spss()</code></li>
+<li>注意編碼、路徑設定、資料內容有沒有錯誤</li>
+</ul></li>
+<li>輸出資料：<code>write.csv()</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>輸入資料後下一步：檢視資料有無異常</h2></hgroup><article >
+
+<p>輸入資料後，我們才準備正要開始 ETL 呢！</p>
+
+<p>複習一下常用的資料檢視方式：</p>
+
+<ul>
+<li>總覽
+
+<ul>
+<li><code>head()</code>, <code>tail()</code>：抓前五筆、後五筆資料</li>
+<li><code>str()</code>, <code>summary()</code>：檢視資料的結構、簡單敘述性統計</li>
+<li><code>View()</code>：自由瀏覽</li>
+</ul></li>
+<li>單一欄位檢視
+
+<ul>
+<li><code>unique()</code>：檢視類別型欄位</li>
+<li><code>table()</code>：檢視類別型欄位</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>資料總覽</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>head(transaction)</pre>
+
+<pre >  X   city district trac_year trac_month            trac_type
+1 1 臺北市   士林區       102          1      房地(土地+建物)
+2 2 臺北市   中山區       102          1      房地(土地+建物)
+3 3 臺北市   中山區       102          1 房地(土地+建物)+車位
+4 4 臺北市   北投區       102          1      房地(土地+建物)
+     trac_content use_type                 build_type build_ymd area_land
+1 土地1建物1車位0       住      公寓(5樓含以下無電梯)    701109      35.0
+2 土地1建物1車位0       商 住宅大樓(11層含以上有電梯)    701228      10.7
+3 土地1建物1車位1       商            套房(1房1廳1衛)    970114       8.5
+4 土地1建物1車位0       商 住宅大樓(11層含以上有電梯)    851218       4.7
+  area_build area_park price_total price_unit age
+1         61       0.0     6380000     105263  32
+2        104       0.0    12010000     114928  32
+3         52       8.6    10080000     194070   5
+4         39       0.0     4600000     116900  17
+ [ reached getOption(&quot;max.print&quot;) -- omitted 2 rows ]</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>tail(transaction)</pre>
+
+<pre >            X   city district trac_year trac_month            trac_type
+153593 153593 新北市   三重區       102          4      房地(土地+建物)
+153594 153594 新北市   三重區       102          6 房地(土地+建物)+車位
+153595 153595 新北市   三重區       102          3      房地(土地+建物)
+153596 153596 新北市   三重區       102          3      房地(土地+建物)
+          trac_content use_type                 build_type build_ymd
+153593 土地1建物1車位0       住 住宅大樓(11層含以上有電梯)   1021220
+153594 土地1建物1車位1       住 住宅大樓(11層含以上有電梯)   1021220
+153595 土地1建物1車位0       住 住宅大樓(11層含以上有電梯)   1021220
+153596 土地1建物1車位0       住 住宅大樓(11層含以上有電梯)   1021220
+       area_land area_build area_park price_total price_unit age
+153593      10.6         81         0    11680000     143471   0
+153594      12.5         97         0    15390000     158382   0
+153595       8.3         64         0     9000000     140034   0
+153596       8.3         64         0     9200000     143146   0
+ [ reached getOption(&quot;max.print&quot;) -- omitted 2 rows ]</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><code>str()</code> 會檢視資料中每個欄位的：型態(int, Factor, chr, &#8230;)以及值</p>
+
+<pre class = 'prettyprint lang-r'>str(transaction)</pre>
+
+<center>
+
+<img src = 'img/str_example.jpg' height = 400>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><code>summary</code> 會檢視資料中每個欄位敘述性統計(值的分佈)</p>
+
+<pre class = 'prettyprint lang-r'>summary(transaction)</pre>
+
+<center>
+
+<img src = 'img/summary_example.jpg' height = 300>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p><code>View()</code></p>
+
+<pre class = 'prettyprint lang-r'>View(transaction)</pre>
+
+<center>
+
+<img src = 'img/view_data.jpg' height = 400>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>單一欄位檢視</h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>table(transaction$city)</pre>
+
+<pre >
+新北市 臺中市 臺北市 高雄市 
+ 57418  37482  24238  34460 </pre>
+
+<pre class = 'prettyprint lang-r'>unique(transaction$district)</pre>
+
+<pre > [1] 士林區 中山區 北投區 南港區 內湖區 中正區 信義區 文山區 松山區 萬華區
+[11] 大安區 大同區 北區   大里區 西屯區 太平區 南屯區 沙鹿區 東勢區 西區  
+[21] 豐原區 中區   北屯區 龍井區 后里區 烏日區 大雅區 南區   潭子區 大甲區
+[31] 神岡區 東區   清水區 霧峰區 大肚區 梧棲區 新社區 外埔區 石岡區 左營區
+[41] 苓雅區 鼓山區 小港區 三民區 鳳山區 楠梓區 新興區 前鎮區 路竹區 仁武區
+[51] 林園區 前金區 岡山區 大寮區 鳥松區 大社區 鹽埕區 橋頭區 湖內區 阿蓮區
+[61] 茄萣區 大樹區 梓官區 美濃區 旗津區 燕巢區 旗山區 永安區 六龜區 甲仙區
+[71] 彌陀區 桃源區 中和區 三峽區 土城區
+ [ reached getOption(&quot;max.print&quot;) -- omitted 24 entries ]
+99 Levels: 三峽區 三民區 三芝區 三重區 中區 中和區 中山區 ... 龍井區</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation">
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation: Pipe Line Coding Style</h2></hgroup><article  id="data-manipulation-pipe-line-coding-style">
+
+</article></slide><slide class=''><hgroup><h2>為什麼這邊要教 Pipeline Coding style ?</h2></hgroup><article  id="-pipeline-coding-style">
+
+<p>根據<del>不具名</del>調查指出，寫程式花了將近 80% 時間在思考<strong>如何命名物件名稱</strong>。</p>
+
+<p>命名物件名稱是門藝術，當然我們也可以隨性命名：</p>
+
+<pre class = 'prettyprint lang-r'>## 假設我們現在要做這件事情
+pixnet_good &lt;- iris$Species
+pixnet_good_again &lt;- as.character(pixnet_good)
+pixnet_good_again_again &lt;- table(pixnet_good_again)
+pixnet_good_again_again</pre>
+
+<pre >pixnet_good_again
+    setosa versicolor  virginica 
+        50         50         50 </pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p>當然我們也可以這樣改寫，節省命名的時間：</p>
+
+<pre class = 'prettyprint lang-r'>table(as.character(iris$Species))</pre>
+
+<pre >
+    setosa versicolor  virginica 
+        50         50         50 </pre>
+
+</article></slide><slide class=''><hgroup><h2>為什麼這邊要教 Pipeline Coding style ?</h2></hgroup><article  id="-pipeline-coding-style-1">
+
+<p>當整份 <code>.r</code> 檔都是這樣的寫法時，你會發現幾個問題：</p>
+
+<ul>
+<li>解讀程式碼不直覺：我們習慣從外往內解讀 <code>table -&gt; as.character -&gt; iris$...</code></li>
+<li>要改寫程式碼也較不容易</li>
+</ul>
+
+<p>所以我們需要一個更直覺的工具幫助我們解決這些問題 &#8230;</p>
+
+</article></slide><slide class=''><hgroup><h2>2014 年最有影響的套件之一：magrittr</h2></hgroup><article  id="magrittr">
+
+<ul>
+<li>壓縮的程式碼不好讀</li>
+<li>展開的程式碼會產生很多暫存變數<br/><br/>
+
+<h3>
+
+<strong>magrittr 套件聽到大家的聲音了！</strong> <img src = 'img/magrittr_logo.png'>
+
+</h3></li>
+<li>運用 <code>magrittr</code> 所開發的 <code>%&gt;%</code> 進行 Pipeline coding style</li>
+<li>養成 Pipeline Style 的 coding 習慣，上述問題迎刃而解！
+
+<ul>
+<li>Pipeline 快捷鍵(MAC)：<code>command + shift + M</code></li>
+<li>Pipeline 快捷鍵(WIN)：<code>ctrl + shift + M</code></li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>基本算子 (<code>%&gt;%</code>)</h2></hgroup><article >
+
+<iframe src="https://giphy.com/embed/aeSS6NKPqOKQ" width="450" height="330" frameBorder="0" class="giphy-embed" allowFullScreen>
+
+</iframe>
+
+</article></slide><slide class=''><hgroup><h2>基本算子 (<code>%&gt;%</code>)</h2></hgroup><article  id="-1">
+
+<ul>
+<li>想像一下程式的寫作與閱讀邏輯</li>
+<li><code>%&gt;%</code> 會將算子左邊的物件 (object) 傳到右邊的函數 (function) 中第一個 argument</li>
+<li>. 點號適合用在欲傳入變數不是在傳入函數的第一個位置時使用</li>
+<li>use <code>x %&gt;% f</code>, rather than <code>f(x)</code></li>
+<li>or use <code>x %&gt;% f(y, z)</code>, rather than <code>f(x, y, z)</code></li>
+<li>or <code>y %&gt;% f(x, ., z)</code>, rather than <code>f(x, y, z)</code></li>
+<li>更多 Pipeline 請參考 Johnson Hsieh 的<a href='https://rawgit.com/DataScienceHC/sandbox-for-datasci/master/%5B2015-08-12%5D%20R%20code%20with%20pipes/index.html' title=''>講義</a></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'># install.packages(&quot;magrittr&quot;)
+library(magrittr)
+x &lt;- 1:10
+x %&gt;% mean # 由左而右順序操作</pre>
+
+<pre >[1] 5.5</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'># 指令壓縮
+plot(density(sample(mtcars$mpg, size=10000, replace=TRUE), 
+             kernel=&quot;gaussian&quot;), col=&quot;red&quot;, main=&quot;density of mpg&quot;)</pre>
+
+<p><img src="DataETL_files/figure-html/unnamed-chunk-36-1.png" width="720" /></p>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'># Pipe Line
+mtcars$mpg %&gt;% 
+    sample(size=10000, replace=TRUE) %&gt;% 
+    density(kernel=&quot;gaussian&quot;) %&gt;% 
+    plot(col=&quot;red&quot;, main=&quot;density of mpg&quot;)</pre>
+
+<p><img src="DataETL_files/figure-html/unnamed-chunk-37-1.png" width="720" /></p>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation : 字串資料處理</h2></hgroup><article  id="data-manipulation-">
+
+</article></slide><slide class=''><hgroup><h2>tidyverse 套件</h2></hgroup><article  id="tidyverse-">
+
+<p><code>stringr</code> 是專門處理字串的一個知名套件，他與之後會介紹的強大套件 <code>dplyr</code>, <code>tidyr</code>, <code>ggplot2</code> 皆整合至 <code>tidyverse</code> 套件之中了。</p>
+
+<center>
+
+<img src = 'img/tidyverse.jpg'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>tidyverse 套件安裝</h2></hgroup><article  id="tidyverse-">
+
+<p>我們先安裝 <code>tidyverse</code> 套件：</p>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;tidyverse&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>library(tidyverse)
+library(stringr)</pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr 基本介紹</h2></hgroup><article  id="stringr-">
+
+<p><a href='http://stringr.tidyverse.org/reference/index.html' title=''>所有的 stringr 的 function</a> 皆用 <code>str_</code> 作為開頭（記得善用 Tab 鍵唷！）</p>
+
+<p>我們用先前的 <code>transaction</code> 資料來練習一下字串處理吧！</p>
+
+<p>以 <code>transaction</code> 的 <code>build_ymd</code> 建築年月日為例:</p>
+
+<pre class = 'prettyprint lang-r'>build_ymd &lt;- transaction$build_ymd
+build_ymd %&gt;% head()</pre>
+
+<pre >[1]  701109  701228  970114  851218  970624 1010724</pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr：str_length &amp; str_sub 字串長度與字串擷取</h2></hgroup><article  id="stringrstr_length-str_sub-">
+
+<ul>
+<li><strong>目標：取出 build_ymd 的年、月、日</strong></li>
+<li>注意：字串的長度不同(6與7)</li>
+<li>善用 <code>?str_sub</code> 查詢 function 使用方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>year &lt;- ifelse(str_length(build_ymd) == 6, 
+               str_sub(build_ymd, 1,2),
+               build_ymd %&gt;% str_sub(1,3)) # 這兩種寫法都可以
+year_unique &lt;- year %&gt;% unique()
+year_unique</pre>
+
+<pre > [1] &quot;70&quot;  &quot;97&quot;  &quot;85&quot;  &quot;101&quot; &quot;100&quot; &quot;87&quot;  &quot;98&quot;  &quot;69&quot;  &quot;86&quot;  &quot;74&quot;  &quot;78&quot; 
+[12] &quot;99&quot;  &quot;67&quot;  &quot;90&quot;  &quot;71&quot;  &quot;75&quot;  &quot;73&quot;  &quot;68&quot;  &quot;94&quot;  &quot;62&quot;  &quot;10&quot;  &quot;92&quot; 
+[23] &quot;82&quot;  &quot;93&quot;  &quot;88&quot;  &quot;76&quot;  &quot;60&quot;  &quot;96&quot;  &quot;66&quot;  &quot;83&quot;  &quot;61&quot;  &quot;81&quot;  &quot;72&quot; 
+[34] &quot;95&quot;  &quot;65&quot;  &quot;89&quot;  &quot;79&quot;  &quot;64&quot;  &quot;63&quot;  &quot;57&quot;  &quot;80&quot;  &quot;84&quot;  &quot;58&quot;  &quot;91&quot; 
+[45] &quot;77&quot;  &quot;56&quot;  &quot;59&quot;  &quot;55&quot;  &quot;51&quot;  &quot;49&quot;  &quot;50&quot;  &quot;45&quot;  &quot;53&quot;  &quot;102&quot; &quot;15&quot; 
+[56] &quot;47&quot;  &quot;54&quot;  &quot;23&quot;  &quot;52&quot;  &quot;41&quot;  &quot;12&quot;  &quot;44&quot;  &quot;17&quot;  &quot;46&quot;  &quot;42&quot;  &quot;48&quot; 
+[67] &quot;38&quot;  &quot;27&quot;  &quot;24&quot;  &quot;103&quot; &quot;35&quot;  &quot;30&quot;  &quot;22&quot;  &quot;21&quot;  &quot;40&quot; 
+ [ reached getOption(&quot;max.print&quot;) -- omitted 11 entries ]</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<p>若不寫 ifelse, 我們也可以：</p>
+
+<ul>
+<li>start = 1 : 從第一個開始</li>
+<li>end = -5 : 到倒數第五個</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>year_unique2 &lt;- str_sub(build_ymd, 1,-5) %&gt;% unique()
+any(year_unique != year_unique2) # check 有沒有任何一個不一樣</pre>
+
+<pre >[1] FALSE</pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr : str_detect 字串檢驗</h2></hgroup><article  id="stringr-str_detect-">
+
+<ul>
+<li><strong>目標：從 build_type 中判斷是否有電梯</strong></li>
+<li>善用 <code>?str_detect</code> 查詢 function 使用方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>build_type_vector &lt;- transaction$build_type
+build_type_vector %&gt;% str_detect(&#39;有電梯&#39;) %&gt;% table</pre>
+
+<pre >.
+FALSE  TRUE 
+62508 91090 </pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr : str_split 字串分割</h2></hgroup><article  id="stringr-str_split-">
+
+<ul>
+<li><strong>目標：根據 fruit 中的 and 進行切割</strong></li>
+<li>善用 <code>?str_split</code> 查詢 function 使用方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>fruits &lt;- c(
+  &quot;apples and oranges and pears and bananas&quot;,
+  &quot;pineapples and mangos and guavas&quot;)
+str_split(fruits, &quot; and &quot;)</pre>
+
+<pre >[[1]]
+[1] &quot;apples&quot;  &quot;oranges&quot; &quot;pears&quot;   &quot;bananas&quot;
+
+[[2]]
+[1] &quot;pineapples&quot; &quot;mangos&quot;     &quot;guavas&quot;    </pre>
+
+<pre class = 'prettyprint lang-r'>str_split(fruits, &quot; and &quot;, simplify = TRUE) # simplify = T &gt; 回傳矩陣</pre>
+
+<pre >     [,1]         [,2]      [,3]     [,4]     
+[1,] &quot;apples&quot;     &quot;oranges&quot; &quot;pears&quot;  &quot;bananas&quot;
+[2,] &quot;pineapples&quot; &quot;mangos&quot;  &quot;guavas&quot; &quot;&quot;       </pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr : str_replace 字串取代</h2></hgroup><article  id="stringr-str_replace-">
+
+<ul>
+<li><strong>目標：將 trac_type 中的<code>房地</code>拿掉</strong></li>
+<li>善用 <code>?str_replace</code> 查詢 function 使用方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>trac_type &lt;- transaction$trac_type
+trac_type %&gt;% str_replace(&#39;房地&#39;,&#39;&#39;) %&gt;% head</pre>
+
+<pre >[1] &quot;(土地+建物)&quot;      &quot;(土地+建物)&quot;      &quot;(土地+建物)+車位&quot;
+[4] &quot;(土地+建物)&quot;      &quot;(土地+建物)&quot;      &quot;(土地+建物)+車位&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>stringr : str_replace 字串取代</h2></hgroup><article  id="stringr-str_replace--1" class="build">
+
+<ul>
+<li>目標：將 trac_type 中的<code>(土地+建物)</code>拿掉</li>
+<li>善用 <code>?str_replace</code> 查詢 function 使用方法</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>trac_type &lt;- transaction$trac_type
+trac_type %&gt;% str_replace(&#39;(土地+建物)&#39;,&#39;&#39;) %&gt;% head</pre>
+
+<pre >[1] &quot;房地(土地+建物)&quot;      &quot;房地(土地+建物)&quot;      &quot;房地(土地+建物)+車位&quot;
+[4] &quot;房地(土地+建物)&quot;      &quot;房地(土地+建物)&quot;      &quot;房地(土地+建物)+車位&quot;</pre>
+
+<center>
+
+<img src='http://i.imgur.com/u4N3wpJ.jpg'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>正規表示法 Regular Expression</h2></hgroup><article  id="-regular-expression">
+
+<p>正規表示法是一種描述文字模式的語言，可以讓我們撰寫程式來自文字中比對、取代甚至是抽取各種資訊。</p>
+
+<p><a href='http://datascienceandr.org/articles/RegularExpression.html' title=''>參考 Wush Wu 所撰寫的教材</a>，開頭或結尾的簡單的例子：</p>
+
+<ul>
+<li><code>^AA</code>:表示以<code>AA</code>為開頭的規則</li>
+<li><code>AA$</code>:表示以<code>AA</code>為結尾的規則</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>str_detect(c(&#39;AA1&#39;,&#39;A2&#39;,&#39;V3&#39;,&#39;AAA4&#39;,&#39;ACA21&#39;),&#39;^AA&#39;)</pre>
+
+<pre >[1]  TRUE FALSE FALSE  TRUE FALSE</pre>
+
+<pre class = 'prettyprint lang-r'>str_detect(c(&#39;AA1&#39;,&#39;A2&#39;,&#39;V3&#39;,&#39;AAA4&#39;,&#39;ACA21&#39;),&#39;1$&#39;)</pre>
+
+<pre >[1]  TRUE FALSE FALSE FALSE  TRUE</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>(土地+建物)</code>無法辨識的原因</h2></hgroup><article >
+
+<p>stringr 中的 <code>pattern</code>參數預設使用正規表示法，剛剛我們所要比對的規則<code>(土地+建物)</code>中的<code>(</code>,<code>+</code>,<code>)</code>皆是正規表示法中的特殊符號，如果這些剛好是要比對的文字，那就要加上跳脫字元&quot;\&quot;。又剛好跳脫字元&quot;\&quot;也是R 的字串的跳脫字元，所以我們在輸入時，一個&quot;\&quot;就要輸入兩次。</p>
+
+<pre class = 'prettyprint lang-r'>trac_type %&gt;% str_replace(&#39;\\(土地\\+建物\\)&#39;,&#39;&#39;) %&gt;% head</pre>
+
+<pre >[1] &quot;房地&quot;      &quot;房地&quot;      &quot;房地+車位&quot; &quot;房地&quot;      &quot;房地&quot;      &quot;房地+車位&quot;</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation : 資料基本操作</h2></hgroup><article  id="data-manipulation-">
+
+</article></slide><slide class=''><hgroup><h2>2014 年最有影響的套件之一：dplyr</h2></hgroup><article  id="dplyr">
+
+<ul>
+<li>讓R 使用者可以用更有彈性的方式來處理資料</li>
+<li>針對<code>data.frame</code>做設計（名稱中的<code>d</code>）</li>
+<li>設計理念
+
+<ul>
+<li>導入資料整理最重要的動作（非常類似SQL）</li>
+<li>快</li>
+<li>支援異質資料源（<code>data.frame</code>或資料庫中的表格）</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>學習dplyr的官方方式：<code>vignette</code></h2></hgroup><article  id="dplyrvignette">
+
+<pre class = 'prettyprint lang-r'>vignette(all = TRUE, package = &quot;dplyr&quot;)
+vignette(&quot;introduction&quot;, package = &quot;dplyr&quot;)</pre>
+
+<ul>
+<li>更詳細的dplyr介紹可以閱讀dplyr的小論文</li>
+<li>R 的開發者會針對一個主題撰寫小論文做介紹</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>dplyr簡介</h2></hgroup><article  id="dplyr" class="columns-2">
+
+<ul>
+<li><code>filter</code> 對列做篩選 (row)</li>
+<li><code>select</code> 對欄做篩選 (column)</li>
+<li><code>arrange</code> 排列</li>
+<li><code>mutate</code> 更改欄或新增欄</li>
+<li>**<code>group_by</code> + <code>summarise</code> 分類</li>
+</ul>
+
+<center>
+
+<img src='img/R_ETL_Fn1.png' style='max-width: 100%;max-height: 100%'></img>
+
+</center>
+
+<p>出處：<a href='https://www.youtube.com/watch?v=JD1eDxxrur0' title=''>資料科學愛好者年會資料分析上手課程：ETL1</a></p>
+
+</article></slide><slide class=''><hgroup><h2><code>filter</code> : 對列做篩選</h2></hgroup><article  id="filter-">
+
+<center>
+
+<img src='img/filter1.png' width=300 align='center'></img><img src='img/filter2.png' width=300 align='center'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>filter</code> : 對列做篩選</h2></hgroup><article  id="filter--1">
+
+<ul>
+<li>目標：取出 city 為 &#39;臺北市&#39;</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(dplyr) #載入套件
+transaction %&gt;% 
+  filter(city == &#39;臺北市&#39;) %&gt;% head</pre>
+
+<center>
+
+<img src = 'img/filter_view.jpg' height = 300>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>select</code> : 對行做選取</h2></hgroup><article  id="select-">
+
+<center>
+
+<img src='img/select1.png' height=300 align='center'></img><img src='img/select2.png' height=300 align='center'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>select</code> : 對行做選取</h2></hgroup><article  id="select--1">
+
+<ul>
+<li>目標：取出 <code>city</code>, <code>district</code>, <code>price_total</code> 欄位</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  select(city, district, price_total) %&gt;% 
+  head()</pre>
+
+<pre >    city district price_total
+1 臺北市   士林區     6380000
+2 臺北市   中山區    12010000
+3 臺北市   中山區    10080000
+4 臺北市   北投區     4600000
+5 臺北市   中山區    23800000
+6 臺北市   北投區    62000000</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>select</code> : 對行做選取</h2></hgroup><article  id="select--2">
+
+<p>也可以用負號<code>-</code>執行反向選取</p>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  select(-c(city, district, price_total))%&gt;% 
+  head()</pre>
+
+<center>
+
+<img src = 'img/select_view.jpg' height = 300>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>arrange</code> : 資料排序</h2></hgroup><article  id="arrange-">
+
+<center>
+
+<img src='img/arrange.png' height=300 align='center'></img><img src='img/arranged.png' height=300 align='center'></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>arrange</code> : 資料排序</h2></hgroup><article  id="arrange--1">
+
+<ul>
+<li>目標：按照總價格 <code>price_total</code> 由小到大進行排序</li>
+<li>注意：可以發現到 price_total 似乎有一些值不合理？(0)如何檢驗？ -&gt; ETL</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% arrange(price_total) %&gt;% select(X,city, price_total) %&gt;% head</pre>
+
+<pre >      X   city price_total
+1 53063 臺中市           0
+2 59110 臺中市           0
+3 74325 高雄市           0
+4  4381 臺北市           1
+5 50387 臺中市        1040
+6 34755 臺中市        1380</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>arrange</code> : 資料排序</h2></hgroup><article  id="arrange--2">
+
+<ul>
+<li>排序預設是由小到大，加上<code>desc</code>可使用遞增排列</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% arrange(desc(price_total)) %&gt;% 
+  select(X,city, price_total) %&gt;% head</pre>
+
+<pre >      X   city price_total
+1  2209 臺北市  8800000000
+2 20777 臺北市  6680000000
+3 49039 臺中市  4896000000
+4 40626 臺中市  2800000000
+5 49569 臺中市  2727360000
+6 99765 新北市  2670000000</pre>
+
+</article></slide><slide class=''><hgroup><h2><code>mutate</code> : 新增/修改欄位</h2></hgroup><article  id="mutate-">
+
+<center>
+
+<img src='img/origin.png' width=300 align='center'></img><img src='img/mutate.png' width=300 align='center'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>mutate</code> : 新增/修改欄位</h2></hgroup><article  id="mutate--1">
+
+<ul>
+<li>目標：根據 <code>area_build</code> , <code>price_total</code> 自行計算單位坪價</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction_new &lt;- transaction %&gt;% 
+  mutate(price_per_unit = price_total/area_build)
+transaction_new %&gt;% select(price_total, area_build, price_per_unit) %&gt;% head</pre>
+
+<pre >  price_total area_build price_per_unit
+1     6380000         61         105263
+2    12010000        104         114928
+3    10080000         52         194070
+4     4600000         39         116900
+5    23800000        185         128510
+6    62000000        287         215765</pre>
+
+</article></slide><slide class=''><hgroup><h2>其他 dplyr 基本常用 function</h2></hgroup><article  id="-dplyr--function">
+
+<ul>
+<li>移除重複資料: <code>distinct(transaction)</code></li>
+<li>隨機抽取資料: <code>sample_n(transaction, 5)</code></li>
+<li>抽取指定列: <code>slice(transaction, c(1,3,4,5))</code></li>
+<li>更多請見<a href='https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf' title=''>dplyr Cheatsheet</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Data Manipulation 小挑戰</h2></hgroup><article  id="data-manipulation-">
+
+<ul>
+<li>目標：利用<code>build_type</code>欄位挑出 <strong>有電梯</strong> 的資料</li>
+<li>方法：<code>filter()</code> + <code>str_()</code></li>
+</ul>
+
+<div id="htmlwidget-9f1fabdeb605f7c28005" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9f1fabdeb605f7c28005">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],[2,4,5,6,7,8],["臺北市","臺北市","臺北市","臺北市","臺北市","臺北市"],["中山區","北投區","中山區","北投區","北投區","南港區"],[102,102,102,102,102,102],[1,1,1,1,1,1],["房地(土地+建物)","房地(土地+建物)","房地(土地+建物)","房地(土地+建物)+車位","房地(土地+建物)+車位","房地(土地+建物)+車位"],["土地1建物1車位0","土地1建物1車位0","土地1建物1車位0","土地1建物1車位2","土地1建物1車位2","土地1建物1車位1"],["商","商","住","住","住","住"],["住宅大樓(11層含以上有電梯)","住宅大樓(11層含以上有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","住宅大樓(11層含以上有電梯)"],[701228,851218,970624,1010724,1010724,1000414],[10.71,4.7,30.97,141.24,139.56,22.79],[104.5,39.35,185.2,287.35,284.27,170.09],[0,0,0,14.14,14.14,33.87],[12010000,4600000,23800000,62000000,58000000,29700000],[114928,116900,128510,218147,204716,174613],[32,17,5,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>X<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>trac_year<\/th>\n      <th>trac_month<\/th>\n      <th>trac_type<\/th>\n      <th>trac_content<\/th>\n      <th>use_type<\/th>\n      <th>build_type<\/th>\n      <th>build_ymd<\/th>\n      <th>area_land<\/th>\n      <th>area_build<\/th>\n      <th>area_park<\/th>\n      <th>price_total<\/th>\n      <th>price_unit<\/th>\n      <th>age<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[1,4,5,10,11,12,13,14,15,16]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+
+</article></slide><slide class=''><hgroup><h2>Data Manipulation 小挑戰參考解答</h2></hgroup><article  id="data-manipulation-">
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  filter(build_type %&gt;% str_detect(&#39;有電梯&#39;)) %&gt;% 
+  head</pre>
+
+</article></slide><slide class=''><hgroup><h2>小挑戰2</h2></hgroup><article  id="2">
+
+<ul>
+<li>目標：請挑出 在台北市中山區與北投區的交易資料，並且新增<code>is_elevator</code> 是否有電梯的欄位，若有電梯則填入&#39;TRUE&#39;，若無則填入&#39;FALSE&#39;，並且以屋齡做遞增排序，僅保留<code>city</code>, <code>district</code>, <code>age</code>, <code>price_unit</code> 等欄位。</li>
+<li>Tips : 多個條件配對可用 <code>%in%</code>。 ex: <code>apple</code> %in% <code>c(&#39;apple&#39;, &#39;banana&#39;)</code></li>
+</ul>
+
+<pre >    city district age price_unit
+1 臺北市   中山區   0     398552
+2 臺北市   中山區   0     307621
+3 臺北市   北投區   0     180279
+4 臺北市   北投區   0     198974
+5 臺北市   北投區   0     183904
+6 臺北市   北投區   0     174448</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  filter(city == &#39;臺北市&#39;, district %in% c(&#39;中山區&#39;,&#39;北投區&#39;)) %&gt;% 
+  mutate(is_eleavator = str_detect(build_type, &#39;有電梯&#39;)) %&gt;% 
+  arrange(age) %&gt;% 
+  select(city, district, age, price_unit) %&gt;% head</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation : 資料型態轉換</h2></hgroup><article  id="data-manipulation-">
+
+</article></slide><slide class=''><hgroup><h2>資料型態轉換 : Wide format &lt;-&gt; Long format</h2></hgroup><article  id="-wide-format---long-format" class="build">
+
+<center>
+
+<img src='img/wide-long.png' height=80%></img>
+
+</center>
+
+<p>事實上 <strong>Long-format</strong> 的資料的格式不容易讓人類做比較。反而比較易於電腦讀取，人類在吸收資訊的時候更適合看 <strong>wide-format</strong>。</p>
+
+<p>接著我們就來介紹如何做資料型態的轉換囉！long-format &lt;-&gt; wide-format</p>
+
+</article></slide><slide class=''><hgroup><h2>spread &amp; gather : 長轉寬</h2></hgroup><article  id="spread-gather-">
+
+<p>接著我們來介紹 tidyr 中的 <code>spread</code> &amp; <code>gather</code> 這兩個 Function：</p>
+
+<ul>
+<li><code>?spread</code> : key 擺放要展開的欄位，value 展開欄位後對應填入的值</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>library(tidyr) # 載入套件
+long &lt;- data.frame(id = c(1,1,2,2,3,3),
+                   sex = c(rep(&#39;female&#39;,2),rep(&#39;male&#39;,4)),
+                   class = rep(c(&#39;math&#39;,&#39;science&#39;), length.out = 6),
+                   score = c(41, 47, 53, 63, 54, 58))
+wide &lt;- long %&gt;% spread(class, score)
+wide</pre>
+
+<pre >  id    sex math science
+1  1 female   41      47
+2  2   male   53      63
+3  3   male   54      58</pre>
+
+</article></slide><slide class=''><hgroup><h2>spread &amp; gather : 寬轉長</h2></hgroup><article  id="spread-gather-">
+
+<ul>
+<li><code>?gather</code> :
+
+<ul>
+<li>key、value : 皆放欄位名稱</li>
+<li><code>-c(id, sex)</code> : 這兩個欄位不要轉換</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>wide %&gt;% 
+  gather(key = &#39;class&#39;,value = &#39;score&#39;, -c(id,sex))</pre>
+
+<pre >  id    sex   class score
+1  1 female    math    41
+2  2   male    math    53
+3  3   male    math    54
+4  1 female science    47
+5  2   male science    63
+6  3   male science    58</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation : 資料合併</h2></hgroup><article  id="data-manipulation-">
+
+</article></slide><slide class=''><hgroup><h2><code>bind_</code> 資料表合併</h2></hgroup><article  id="bind_-" class="columns-2">
+
+<ul>
+<li>dplyr::<code>bind_rows()</code></li>
+</ul>
+
+<p><img src='img/bind_rows.png' height=400 align='center'></img></p>
+
+<ul>
+<li>dplyr::<code>bind_cols</code></li>
+</ul>
+
+<p><img src='img/bind_col.png' height=300 align='center'></img></p>
+
+</article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join-">
+
+<p><strong>join family：left_join</strong></p>
+
+<pre class = 'prettyprint lang-r'>left_join(a, b, by = &quot;x1&quot;)</pre>
+
+<center>
+
+<img src='img/left_join.png' height=400></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join--1">
+
+<p><strong>join family：right_join</strong></p>
+
+<pre class = 'prettyprint lang-r'>right_join(a, b, by = &quot;x1&quot;)</pre>
+
+<center>
+
+<img src='img/right_join.png' height=400></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join--2">
+
+<p><strong>join family：inner_join</strong></p>
+
+<pre class = 'prettyprint lang-r'>inner_join(a, b, by = &quot;x1&quot;)</pre>
+
+<center>
+
+<img src='img/inner_join.png' height=400></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>union (聯集)</code> 資料表合併</h2></hgroup><article  id="union--">
+
+<pre class = 'prettyprint lang-r'>union(a, b)</pre>
+
+<center>
+
+<img src='img/union.png' height=400></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>intersect (交集)</code> 資料表合併</h2></hgroup><article  id="intersect--">
+
+<pre class = 'prettyprint lang-r'>intersect(a, b)</pre>
+
+<center>
+
+<img src='img/intersect.png' height=400></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><code>setdiff (插集)</code> 資料表合併</h2></hgroup><article  id="setdiff--">
+
+<pre class = 'prettyprint lang-r'>setdiff(a, b)</pre>
+
+<center>
+
+<img src='img/setdiff.png' height=400></img>
+
+</center>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Aggregation : 樞紐分析</h2></hgroup><article  id="data-aggregation-">
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析 <code>group_by</code> + <code>summarise</code></h2></hgroup><article  id="-group_by-summarise">
+
+<center>
+
+<img src='img/origin.png' width=300 align='center'></img><img src='img/group_by.png' width=300 align='center'></img><img src='img/summarise.png' width=300 align='center'>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析 <code>group_by</code> + <code>summarise()</code></h2></hgroup><article  id="-group_by-summarise-1">
+
+<ul>
+<li>目標：計算 <strong>各縣市</strong> 的交易<strong>筆數</strong>與<strong>平均坪價</strong>，並以高排到低。</li>
+<li>利用<code>?dplyr::summarise</code> 查看可以擺什麼 <code>summary functions</code>
+
+<ul>
+<li><code>min()</code>, <code>max()</code></li>
+<li><code>n()</code>, <code>mean()</code></li>
+<li>更多請見 dplyr cheatsheet</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析 <code>group_by</code> + <code>summarise(n())</code></h2></hgroup><article  id="-group_by-summarisen">
+
+<ul>
+<li>利用<code>group_by</code> + <code>summarise</code> + <code>arrange(desc)</code>
+
+<ul>
+<li><code>summarise</code> 中的擺放的<code>fun</code>為 <code>n()</code> = <code>length()</code>，表示該 group 中有幾筆資料、<code>mean(price_unit)</code>表示該 group 中 price_unit 平均。</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  group_by(city) %&gt;% 
+  summarise(n = n(), mean = mean(price_unit, na.rm=T))</pre>
+
+<pre ># A tibble: 4 x 3
+    city     n   mean
+  &lt;fctr&gt; &lt;int&gt;  &lt;dbl&gt;
+1 新北市 57418  94645
+2 臺中市 37482  50729
+3 臺北市 24238 179345
+4 高雄市 34460  44874</pre>
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析 <code>group_by</code> + <code>summarise(max)</code></h2></hgroup><article  id="-group_by-summarisemax">
+
+<ul>
+<li>目標：計算 <strong>各縣市</strong> 的最高的<strong>平均坪價</strong>為多少？</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  group_by(city) %&gt;% 
+  summarise(max_price = max(price_unit, na.rm=T))</pre>
+
+<pre ># A tibble: 4 x 2
+    city max_price
+  &lt;fctr&gt;     &lt;int&gt;
+1 新北市    967864
+2 臺中市   4284119
+3 臺北市   1730511
+4 高雄市   1902305</pre>
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析小挑戰</h2></hgroup><article >
+
+<center>
+
+請列出<strong>臺北市的各行政區</strong>於<strong>各種住宅型態</strong>的<strong>平均單位坪價</strong>，由平均高至低做排序。
+
+</center>
+
+<ul>
+<li>Tips : filter -&gt; group_by(a,b) -&gt; summrise() -&gt; arrange</li>
+</ul>
+
+<div id="htmlwidget-064acacaccee5b86d310" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-064acacaccee5b86d310">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],["中山區","中山區","中山區","中山區","中山區","中山區"],["住宅大樓(11層含以上有電梯)","公寓(5樓含以下無電梯)","其他","套房(1房1廳1衛)","店面(店鋪)","廠辦"],[200214,167935,169688,188090,321502,108095]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>build_type<\/th>\n      <th>mean<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  filter(city == &#39;臺北市&#39;) %&gt;% 
+  group_by(district, build_type) %&gt;% 
+  summarise(mean = mean(price_unit, na.rm = T))</pre>
+
+</article></slide><slide class=''><hgroup><h2>樞紐分析小挑戰之資料型態轉換</h2></hgroup><article >
+
+<p><code>summarise</code> 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 <code>EDA in R</code>的課程中感受到！</p>
+
+<p>我們利用先前學的資料型態轉換的技巧來將結果轉成方便讀比較的形式</p>
+
+<pre class = 'prettyprint lang-r'>transaction %&gt;% 
+  filter(city == &#39;臺北市&#39;) %&gt;% 
+  group_by(district, build_type) %&gt;% 
+  summarise(mean = mean(price_unit, na.rm = T)) %&gt;% 
+  spread(build_type, mean)</pre>
+
+</article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
+
+<div id="htmlwidget-77109517c004db1f0544" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-77109517c004db1f0544">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["中山區","中正區","信義區","內湖區","北投區","南港區","士林區","大同區","大安區","文山區","松山區","萬華區"],[200214,229674,258466,182017,158507,176615,183989,163586,265114,141354,204394,116203],[null,null,null,null,null,null,null,null,null,null,null,null],[167935,184602,172837,131326,122253,135070,142213,122370,230102,114889,182431,106512],[169688,186258,209249,156739,132688,104939,179030,127207,255146,128248,179269,122529],[188090,244910,273522,172550,125080,172635,206310,160747,299884,142802,236885,139359],[null,null,null,null,null,null,null,null,null,null,null,null],[321502,365934,306637,233378,226424,298272,332198,262094,493982,236666,346354,271327],[108095,null,null,122199,83056,104075,195339,null,null,null,null,null],[183347,224495,198445,158353,128830,163638,177342,152853,262002,132964,208602,117275],[192375,206515,228954,158840,112483,145637,187768,142733,260289,159270,196147,156886],[null,null,null,null,null,null,null,null,null,null,null,null],[289989,252855,310359,173753,220166,131345,294524,170251,298228,128023,218961,184842]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>住宅大樓(11層含以上有電梯)<\/th>\n      <th>倉庫<\/th>\n      <th>公寓(5樓含以下無電梯)<\/th>\n      <th>其他<\/th>\n      <th>套房(1房1廳1衛)<\/th>\n      <th>工廠<\/th>\n      <th>店面(店鋪)<\/th>\n      <th>廠辦<\/th>\n      <th>華廈(10層含以下有電梯)<\/th>\n      <th>辦公商業大樓<\/th>\n      <th>農舍<\/th>\n      <th>透天厝<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Recap Today</h2></hgroup><article  id="recap-today">
+
+</article></slide><slide class=''><hgroup><h2><strong>Data ETL 的第一步：輸入資料</strong></h2></hgroup><article  id="data-etl-" class="columns-2">
+
+<ul>
+<li>設定資料路徑：<code>getwd()</code> &amp; <code>setwd()</code></li>
+<li>輸入不同資料型態：
+
+<ul>
+<li>表格式： <code>read.csv()</code> &amp; <code>read.table()</code></li>
+<li>網頁： <code>readLines()</code></li>
+<li>其他軟體： <code>read.sas7bdat()</code> &amp; <code>read.spss()</code></li>
+<li>注意編碼、路徑設定、資料內容有沒有錯誤</li>
+</ul></li>
+<li>輸出資料：<code>write.csv()</code></li>
+</ul>
+
+<center>
+
+<img src = 'img/recap-io.jpg' height = 450>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><strong>Data Manipulation：將資料操之在手。</strong></h2></hgroup><article  id="data-manipulation" class="columns-2">
+
+<ul>
+<li>字串取代/配對/長度/位置/切割：
+
+<ul>
+<li><code>str_</code></li>
+</ul></li>
+<li>資料表基本操作方式:
+
+<ul>
+<li><code>filter</code> 挑選列 <code>select</code> 挑選欄</li>
+<li><code>arrange</code> 排序, <code>mutate</code> 新增修改</li>
+</ul></li>
+<li>資料表型態轉換：
+
+<ul>
+<li><code>gather</code> 寬轉長</li>
+<li><code>spread</code> 長轉寬</li>
+</ul></li>
+<li>資料合併：
+
+<ul>
+<li><code>_join</code>：合併資料表</li>
+<li><code>bind_</code> : 合併列或欄</li>
+</ul></li>
+</ul>
+
+<center>
+
+<img src = 'img/recap-man.jpg' height = 450>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2><strong>Data Aggregation : 樞紐分析</strong></h2></hgroup><article  id="data-aggregation--1">
+
+<ul>
+<li>資料彙總:
+
+<ul>
+<li><code>group_by</code> 依照</li>
+<li><code>summarise</code> 彙總 <code>mean</code>, <code>median</code>, <code>sum</code>, <code>max</code>, <code>min</code>, <code>n</code></li>
+</ul></li>
+</ul>
+
+<center>
+
+<img src = 'img/recap-agg.jpg' width = 800>
+
+</center>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Finally, &#8230;.</h2></hgroup><article  id="finally-....">
+
+</article></slide><slide class=''><hgroup><h2>恭喜大家踏入清資料的坑！</h2></hgroup><article >
+
+<center>
+
+<img src = 'img/datascientist_flow.png' height = 500>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>非誠勿擾，切勿 GIGO</h2></hgroup><article  id="-gigo">
+
+<center>
+
+<img src = 'img/garbage-in-garbage-out.jpg' height = 400>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>本週作業</h2></hgroup><article >
+
+<p>請同學完成R語言翻轉教室以下章節：</p>
+
+<ul>
+<li><code>01-RBasic-07-Loading-Dataset</code></li>
+<li><code>02-RDataEngineer-03-JSON</code></li>
+<li><code>02-RDataEngineer-05-Data-Manipulation</code></li>
+<li><code>02-RDataEngineer-06-Join</code></li>
+</ul>
+
+<p>選修：</p>
+
+<ul>
+<li><code>02-RDataEngineer-01-Parsing</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>補充資料</h2></hgroup><article >
+
+<ul>
+<li><a href='https://www.rstudio.com/resources/cheatsheets/' title=''>必收的 Rstudio 發表的大量 Cheatsheet</a></li>
+<li><a href='http://datascienceandr.org/' title=''>R語言翻轉教室 &#8211; 全中文R語言互動式教材</a></li>
+<li><a href='http://tidyverse.org/' title=''>tidyverse 介紹</a></li>
+<li><a href='https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html' title=''>Introduction to dplyr</a></li>
+<li><a href='http://www.cookbook-r.com/' title=''>Cookbook for R</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>繼續學習之路</h2></hgroup><article >
+
+<ul>
+<li>了解自己的需求，詢問關鍵字與函數</li>
+<li><a href='http://www.meetup.com/Taiwan-R' title=''>Taiwan R User Group</a>，mailing list: <a href='mailto:Taiwan-useR-Group-list@meetup.com' title=''>Taiwan-useR-Group-list@meetup.com</a></li>
+<li><a href='https://www.ptt.cc/bbs/R_Language/index.html' title=''>ptt R_Language版</a></li>
+<li><a href='https://groups.google.com/forum/#!forum/taiwanruser' title=''>R軟體使用者論壇</a></li>
+<li><a href='http://stackoverflow.com/' title=''>StackOverflow</a></li>
+<li>歡迎來信 <a href='mailto:leslie.li@dsp.im' title=''>leslie.li@dsp.im</a> 或與其他DSP優秀教師多多交流</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>感謝大家！</h2></hgroup><article >
+
+<center>
+
+<br><br><img src = 'img/thank-you1.jpg' height = 400>
+
+</center></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
