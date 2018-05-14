@@ -1,5 +1,5 @@
 ---
-title: "資料清理與轉換"
+title: "Data ETL with R"
 subtitle: "Data Extract, Transform and Load"
 author: "DSP作者群 @BenQ Workshop"
 date: ' 2018-06-06'
@@ -33,14 +33,14 @@ library(DT)
 options('scipen'=100,'digits'=2)
 ## Global options
 options(max.print="75")
-opts_chunk$set(echo = TRUE, cache=TRUE, comment="", 
+opts_chunk$set(echo = TRUE, cache=TRUE, comment="",
                cache.path = ".cache-EDA/")
 fig <- function(path, size = 100) {
-  sprintf("<img src='img/%s' style='max-width: %d%%;max-height: %d%%'></img>", 
+  sprintf("<img src='img/%s' style='max-width: %d%%;max-height: %d%%'></img>",
           path, size, size)
 }
 fig2 <- function(path, size = 100) {
-  sprintf("<img src='img/%s' style='width: %d%%'></img>", 
+  sprintf("<img src='img/%s' style='width: %d%%'></img>",
           path, size)
 }
 sys_name <- Sys.info()["sysname"] %>% tolower
@@ -75,12 +75,12 @@ dir()
 ############### 絕對路徑 ###############
 # 請輸入完整的檔案路徑
 transaction <- read.csv("/Users/sheng/Desktop/data/transaction.csv") #如果你是mac
-transaction <- read.csv("C:\\Users\\transaction.csv") #如果你是windows 
+transaction <- read.csv("C:\\Users\\transaction.csv") #如果你是windows
 ############### 相對路徑 ###############
 # 設定我們檔案存放的路徑
-setwd() 
+setwd()
 # 讀檔起手式
-transaction <- read.csv("transaction.csv") 
+transaction <- read.csv("transaction.csv")
 # 若讀入的是亂碼，猜猜看以下兩種編碼 utf-8 and big5
 transaction <- read.csv("transaction.csv",fileEncoding = 'big5')
 transaction <- read.csv("transaction.csv",fileEncoding = 'utf-8')
@@ -234,7 +234,7 @@ dat <- read.csv(file = path, header = TRUE, sep = "1")
 ```
 
 <pre>
-Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+Error in read.table(file = file, header = header, sep = sep, quote = quote,  :
   more columns than column names
 </pre>
 
@@ -242,7 +242,7 @@ Error in read.table(file = file, header = header, sep = sep, quote = quote,  :
 - 確認每列的資料的欄位是正確的
 - 必要時，請用其他文件編輯器校正欲讀取的檔案
 
-## 排解疑難 - 常見的讀取錯誤3 
+## 排解疑難 - 常見的讀取錯誤3
 
 編碼錯誤
 
@@ -255,7 +255,7 @@ dat <- read.csv(url)
 ```
 
 <pre class="code">
-Error in make.names(col.names, unique = TRUE) : 
+Error in make.names(col.names, unique = TRUE) :
   無效的多位元組字串於 <b6>m<c2><ed><a5><ab><b0><cf>
 </pre>
 
@@ -275,7 +275,7 @@ dat2 <- read.csv(url, fileEncoding = "big5")
 
 ```{r, eval = F}
 # install.packages("foreign") # 安裝R套件 foreign
-library(foreign) # 載入套件 
+library(foreign) # 載入套件
 cars <- read.spss("data/Cars.sav", to.data.frame = TRUE)
 milk <- read.dta("data/p004.dta")
 # head(cars)
@@ -380,7 +380,7 @@ head(unlist(tmp))
 - 單一欄位檢視
     - `unique()`：檢視類別型欄位
     - `table()`：檢視類別型欄位
-    
+
 ## 資料總覽
 
 ```{r}
@@ -468,13 +468,13 @@ table(as.character(iris$Species))
 
 所以我們需要一個更直覺的工具幫助我們解決這些問題 ...
 
-## 2014 年最有影響的套件之一：magrittr 
+## 2014 年最有影響的套件之一：magrittr
 
 - 壓縮的程式碼不好讀
 - 展開的程式碼會產生很多暫存變數
 \
 \
-<h3> **magrittr 套件聽到大家的聲音了！** 
+<h3> **magrittr 套件聽到大家的聲音了！**
   <img src = 'img/magrittr_logo.png'>
 </h3>
 
@@ -508,7 +508,7 @@ x %>% mean # 由左而右順序操作
 
 ```{r}
 # 指令壓縮
-plot(density(sample(mtcars$mpg, size=10000, replace=TRUE), 
+plot(density(sample(mtcars$mpg, size=10000, replace=TRUE),
              kernel="gaussian"), col="red", main="density of mpg")
 ```
 
@@ -516,9 +516,9 @@ plot(density(sample(mtcars$mpg, size=10000, replace=TRUE),
 
 ```{r}
 # Pipe Line
-mtcars$mpg %>% 
-    sample(size=10000, replace=TRUE) %>% 
-    density(kernel="gaussian") %>% 
+mtcars$mpg %>%
+    sample(size=10000, replace=TRUE) %>%
+    density(kernel="gaussian") %>%
     plot(col="red", main="density of mpg")
 ```
 
@@ -564,7 +564,7 @@ build_ymd %>% head()
 - 善用 `?str_sub` 查詢 function 使用方法
 
 ```{r}
-year <- ifelse(str_length(build_ymd) == 6, 
+year <- ifelse(str_length(build_ymd) == 6,
                str_sub(build_ymd, 1,2),
                build_ymd %>% str_sub(1,3)) # 這兩種寫法都可以
 year_unique <- year %>% unique()
@@ -646,7 +646,7 @@ str_detect(c('AA1','A2','V3','AAA4','ACA21'),'1$')
 
 ## `(土地+建物)`無法辨識的原因
 
-stringr 中的 `pattern`參數預設使用正規表示法，剛剛我們所要比對的規則`(土地+建物)`中的`(`,`+`,`)`皆是正規表示法中的特殊符號，如果這些剛好是要比對的文字，那就要加上跳脫字元"\\"。又剛好跳脫字元"\\"也是R 的字串的跳脫字元，所以我們在輸入時，一個"\\"就要輸入兩次。 
+stringr 中的 `pattern`參數預設使用正規表示法，剛剛我們所要比對的規則`(土地+建物)`中的`(`,`+`,`)`皆是正規表示法中的特殊符號，如果這些剛好是要比對的文字，那就要加上跳脫字元"\\"。又剛好跳脫字元"\\"也是R 的字串的跳脫字元，所以我們在輸入時，一個"\\"就要輸入兩次。
 
 ```{r}
 trac_type %>% str_replace('\\(土地\\+建物\\)','') %>% head
@@ -685,7 +685,7 @@ vignette("introduction", package = "dplyr")
 
 出處：[資料科學愛好者年會資料分析上手課程：ETL1](https://www.youtube.com/watch?v=JD1eDxxrur0)
 
-## `filter` : 對列做篩選 
+## `filter` : 對列做篩選
 
 <center>
 <img src='img/filter1.png' width=300 align='center'></img><img src='img/filter2.png' width=300 align='center'>
@@ -697,7 +697,7 @@ vignette("introduction", package = "dplyr")
 
 ```{r, eval = F}
 library(dplyr) #載入套件
-transaction %>% 
+transaction %>%
   filter(city == '臺北市') %>% head
 ```
 
@@ -714,8 +714,8 @@ transaction %>%
 - 目標：取出 `city`, `district`, `price_total` 欄位
 
 ```{r}
-transaction %>% 
-  select(city, district, price_total) %>% 
+transaction %>%
+  select(city, district, price_total) %>%
   head()
 ```
 
@@ -724,8 +724,8 @@ transaction %>%
 也可以用負號`-`執行反向選取
 
 ```{r, eval= F}
-transaction %>% 
-  select(-c(city, district, price_total))%>% 
+transaction %>%
+  select(-c(city, district, price_total))%>%
   head()
 ```
 
@@ -751,7 +751,7 @@ transaction %>% arrange(price_total) %>% select(X,city, price_total) %>% head
 - 排序預設是由小到大，加上`desc`可使用遞增排列
 
 ```{r}
-transaction %>% arrange(desc(price_total)) %>% 
+transaction %>% arrange(desc(price_total)) %>%
   select(X,city, price_total) %>% head
 ```
 
@@ -767,7 +767,7 @@ transaction %>% arrange(desc(price_total)) %>%
 - 目標：根據 `area_build` , `price_total` 自行計算單位坪價
 
 ```{r}
-transaction_new <- transaction %>% 
+transaction_new <- transaction %>%
   mutate(price_per_unit = price_total/area_build)
 transaction_new %>% select(price_total, area_build, price_per_unit) %>% head
 ```
@@ -785,9 +785,9 @@ transaction_new %>% select(price_total, area_build, price_per_unit) %>% head
 - 方法：`filter()` + `str_()`
 
 ```{r, echo = F}
-transaction %>% 
-  filter(build_type %>% str_detect('有電梯')) %>% 
-  head %>% 
+transaction %>%
+  filter(build_type %>% str_detect('有電梯')) %>%
+  head %>%
   datatable(options = list(dom = 't',scrollX = TRUE, fixedColumns = TRUE,
                            initComplete = JS("function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});",
@@ -797,8 +797,8 @@ transaction %>%
 ## Data Manipulation 小挑戰參考解答
 
 ```{r, echo = T, eval = F}
-transaction %>% 
-  filter(build_type %>% str_detect('有電梯')) %>% 
+transaction %>%
+  filter(build_type %>% str_detect('有電梯')) %>%
   head
 ```
 
@@ -808,20 +808,20 @@ transaction %>%
 - Tips : 多個條件配對可用 `%in%`。 ex: `apple` %in% `c('apple', 'banana')`
 
 ```{r, echo = F}
-transaction %>% 
-  filter(city == '臺北市', district %in% c('中山區','北投區')) %>% 
-  mutate(is_eleavator = str_detect(build_type, '有電梯')) %>% 
-  arrange(age) %>% 
+transaction %>%
+  filter(city == '臺北市', district %in% c('中山區','北投區')) %>%
+  mutate(is_eleavator = str_detect(build_type, '有電梯')) %>%
+  arrange(age) %>%
   select(city, district, age, price_unit) %>% head
 ```
 
 ----
 
 ```{r, eval=F}
-transaction %>% 
-  filter(city == '臺北市', district %in% c('中山區','北投區')) %>% 
-  mutate(is_eleavator = str_detect(build_type, '有電梯')) %>% 
-  arrange(age) %>% 
+transaction %>%
+  filter(city == '臺北市', district %in% c('中山區','北投區')) %>%
+  mutate(is_eleavator = str_detect(build_type, '有電梯')) %>%
+  arrange(age) %>%
   select(city, district, age, price_unit) %>% head
 ```
 
@@ -854,12 +854,12 @@ wide
 
 ## spread & gather : 寬轉長
 
-- `?gather` : 
+- `?gather` :
     - key、value : 皆放欄位名稱
     - `-c(id, sex)` : 這兩個欄位不要轉換
 
 ```{r}
-wide %>% 
+wide %>%
   gather(key = 'class',value = 'score', -c(id,sex))
 ```
 
@@ -944,15 +944,15 @@ setdiff(a, b)
     - `min()`, `max()`
     - `n()`, `mean()`
     - 更多請見 dplyr cheatsheet
-    
+
 ## 樞紐分析 `group_by` + `summarise(n())`    
 
 - 利用`group_by` + `summarise` + `arrange(desc)`
     - `summarise` 中的擺放的`fun`為 `n()` = `length()`，表示該 group 中有幾筆資料、`mean(price_unit)`表示該 group 中 price_unit 平均。
 
 ```{r}
-transaction %>% 
-  group_by(city) %>% 
+transaction %>%
+  group_by(city) %>%
   summarise(n = n(), mean = mean(price_unit, na.rm=T))
 ```
 
@@ -961,8 +961,8 @@ transaction %>%
 - 目標：計算 **各縣市** 的最高的**平均坪價**為多少？
 
 ```{r}
-transaction %>% 
-  group_by(city) %>% 
+transaction %>%
+  group_by(city) %>%
   summarise(max_price = max(price_unit, na.rm=T))
 ```
 
@@ -974,20 +974,20 @@ transaction %>%
 - Tips : filter -> group_by(a,b) -> summrise() -> arrange
 
 ```{r, echo = F}
-transaction %>% 
-  filter(city == '臺北市') %>% 
-  group_by(district, build_type) %>% 
-  summarise(mean = round(mean(price_unit, na.rm = T))) %>% 
-  head %>% 
+transaction %>%
+  filter(city == '臺北市') %>%
+  group_by(district, build_type) %>%
+  summarise(mean = round(mean(price_unit, na.rm = T))) %>%
+  head %>%
   datatable(options = list(dom = 't',scrollX = TRUE, fixedColumns = TRUE,initComplete = JS("function(settings, json) {","$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});","}")),extensions = 'FixedColumns')
 ```
 
 ---
 
 ```{r, eval = F}
-transaction %>% 
-  filter(city == '臺北市') %>% 
-  group_by(district, build_type) %>% 
+transaction %>%
+  filter(city == '臺北市') %>%
+  group_by(district, build_type) %>%
   summarise(mean = mean(price_unit, na.rm = T))
 ```
 
@@ -999,21 +999,21 @@ transaction %>%
 我們利用先前學的資料型態轉換的技巧來將結果轉成方便讀比較的形式
 
 ```{r, eval = F}
-transaction %>% 
-  filter(city == '臺北市') %>% 
-  group_by(district, build_type) %>% 
-  summarise(mean = mean(price_unit, na.rm = T)) %>% 
+transaction %>%
+  filter(city == '臺北市') %>%
+  group_by(district, build_type) %>%
+  summarise(mean = mean(price_unit, na.rm = T)) %>%
   spread(build_type, mean)
 ```
 
 ---
 
 ```{r, echo = F}
-transaction %>% 
-  filter(city == '臺北市') %>% 
-  group_by(district, build_type) %>% 
-  summarise(mean = round(mean(price_unit, na.rm = T))) %>% 
-  spread(build_type, mean) %>% 
+transaction %>%
+  filter(city == '臺北市') %>%
+  group_by(district, build_type) %>%
+  summarise(mean = round(mean(price_unit, na.rm = T))) %>%
+  spread(build_type, mean) %>%
     datatable(options = list(dom = 't',scrollX = TRUE, fixedColumns = TRUE,initComplete = JS("function(settings, json) {","$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});","}")),extensions = 'FixedColumns')
 ```
 
@@ -1023,7 +1023,7 @@ transaction %>%
 
 - 設定資料路徑：`getwd()` & `setwd()`
 - 輸入不同資料型態：
-    - 表格式： 
+    - 表格式：
     `read.csv()` & `read.table()`
     - 網頁： `readLines()`
     - 其他軟體：
@@ -1046,14 +1046,14 @@ transaction %>%
 - 資料合併：
     - `_join`：合併資料表
     - `bind_` : 合併列或欄
-    
+
 <center><img src = 'img/recap-man.jpg' height = 450></center>
 
-## **Data Aggregation : 樞紐分析** 
+## **Data Aggregation : 樞紐分析**
 
 - 資料彙總:
     - `group_by` 依照
-    - `summarise` 彙總 
+    - `summarise` 彙總
     `mean`, `median`, `sum`, `max`, `min`, `n`
 
 <center><img src = 'img/recap-agg.jpg' width = 800></center>
@@ -1095,7 +1095,7 @@ transaction %>%
 - [Taiwan R User Group](http://www.meetup.com/Taiwan-R)，mailing list: Taiwan-useR-Group-list@meetup.com
 - [ptt R_Language版](https://www.ptt.cc/bbs/R_Language/index.html)
 - [R軟體使用者論壇](https://groups.google.com/forum/#!forum/taiwanruser)
-- [StackOverflow](http://stackoverflow.com/) 
+- [StackOverflow](http://stackoverflow.com/)
 - 歡迎來信 <leslie.li@dsp.im> 或與其他DSP優秀教師多多交流
 
 ## 感謝大家！
