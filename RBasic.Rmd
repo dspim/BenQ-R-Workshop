@@ -670,7 +670,7 @@ regmatches(txt, matches)
 
 - 用`sessionInfo()`確定R 的版本
 - 重開R
-- 執行`source("http://dspim.github.io/PIXNET-Data-Science-Workshop/R/init-swirl-dev.R")`
+- 執行`source("http://wush978.github.io/R/init-swirl.R")`
 - 下頁繼續...
 
 ## 安裝翻轉教室
@@ -703,7 +703,6 @@ swirl()
 # 3. Classroom
 ```
 - 一般使用者，請使用 Google 或 Facebook 進行登入
-- 企業內訓的員工，請洽課程講師詢問授權帳號與密碼
 
 ## 介紹訊息
 

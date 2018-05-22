@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rmarkdown</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+  <meta name="date" content="2017-06-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" media="all" href="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/fonts/fonts.css">
+
+  <link rel="stylesheet" media="all" href="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/theme/css/phone.css">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Rmarkdown',
+                        useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'Alger 與其他作者群 <span class="citation">@PIXNET</span> Workshop' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+  <link rel="stylesheet" href="css/dsp.css" type="text/css" />
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-06-17</p>
+          </hgroup>
+  </slide>
+
+<slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Why we need R Markdown？</h2></hgroup><article  id="why-we-need-r-markdown">
+
+</article></slide><slide class=''><hgroup><h2>資料分析流程</h2></hgroup><article >
+
+<div style="float:right;width:58%;">
+<p><img src='img/road.png' style='height: 300px'></img></p></div>
+
+<ul class = 'build'>
+<li>資料採集</li>
+<li>資料清洗處理</li>
+<li>統計及分析</li>
+<li>視覺呈現</li>
+<li><p style="color:#750000;font-size:36px;">
+
+報告產出
+
+</p></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>資料分析 in R</h2></hgroup><article  id="-in-r">
+
+<center>
+
+<img src="img/ResearchPipeline.png" style="max-width:84%;max-height:84%;" /><br/><small><a href='https://www.coursera.org/course/repdata' title=''>https://www.coursera.org/course/repdata</a></small>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>Why we need R Markdown？</h2></hgroup><article  id="why-we-need-r-markdown-1">
+
+<ul>
+<li>製作reproducible的報告、投影片</li>
+<li>想寫數學式子好展現自己的專業 \(e=mc^2\)</li>
+<li>只有一份source code，不需要額外複製圖片到報告中</li>
+<li>需求更改時，可以動態改變報告內容</li>
+<li>增加資料分析演算法的可讀性</li>
+<li>IDE? RStudio提供支援</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Why we need R Markdown？</h2></hgroup><article  id="why-we-need-r-markdown-2">
+
+<ul class = 'build'>
+<li>時間久了會忘記code的意思</li>
+<li>要寫說明文件給同學、同事、教授、主管</li>
+<li>教授很有想法，想嘗試新方法 <br> (<del>FK！又要重跑一份</del>)</li>
+<li>老闆說要改流程 <br> (<del>MD!之前貼到簡報上的圖又要重貼一份</del>)</li>
+<li><strong>專案報告要呈現，code改了，但是文件無法同時修改！</strong> <br></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Markdown</h2></hgroup><article  id="markdown">
+
+</article></slide><slide class=''><hgroup><h2>What is Markdown？</h2></hgroup><article  id="what-is-markdown">
+
+<ul>
+<li>啟發自2004年純文字電子郵件</li>
+<li>好寫、好讀</li>
+<li>可以純文字發布</li>
+<li><a href='http://daringfireball.net/projects/markdown/basics' title=''>Markdown</a>
+
+<ul>
+<li>Light weight markup language</li>
+<li>Remove HTML tag for higher readibility.</li>
+<li>Inline HTML is avaliable.</li>
+<li>HTML5 Introduction (<a href='https://www.w3schools.com/html/html5_intro.asp' title=''>w3schools.com</a>)</li>
+</ul></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>What is RMarkdown？</h2></hgroup><article  id="what-is-rmarkdown">
+
+<ul>
+<li>可以在 Markdown 內嵌 R code</li>
+<li>一次呈現執行程式碼後的結果及文字說明</li>
+<li>不用再把圖、表複製到其他文件編輯器中</li>
+<li>Rmd -&gt; md -&gt; html (docx, pdf)</li>
+</ul>
+
+<center>
+
+<img src='img/rmdproce.png' width=1000 align='center'></img>
+
+</center>
+
+</article></slide><slide class=''><hgroup><h2>前置作業 - 安裝</h2></hgroup><article  id="---">
+
+<ul>
+<li>最新版的RStudio已經包含R Markdown功能</li>
+<li>你也可以透過以下指令安裝R Markdown套件：</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>install.packages(&quot;rmarkdown&quot;)</pre>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>LiveDemo</h2></hgroup><article  id="livedemo">
+
+</article></slide><slide class=''><hgroup><h2>Source</h2></hgroup><article  id="source">
+
+<ul>
+<li><a href='http://mansunkuo.github.io/rmd_tutorial/' title=''>An Introduction to R Markdown*</a> by Mansun Kuo @ <a href='http://taiwanrusergroup.github.io/DSC2014Tutorial/' title=''>DSC2014</a></li>
+<li><a href='http://shiny.rstudio.com/articles/rm-cheatsheet.html' title=''>R Markdown Cheat Sheet</a></li>
+<li><a href='http://rmarkdown.rstudio.com/' title=''>R Markdown</a></li>
+<li><a href='http://yihui.name/knitr/' title=''>knitr</a></li>
+<li><a href='https://support.rstudio.com/hc/en-us/categories/200035113-Documentation' title=''>RStudio Documentation</a></li>
+<li><a href='https://www.coursera.org/course/repdata' title=''>Reproducible Research</a></li>
+<li><a href='http://shiny.rstudio.com/articles/' title=''>Shiny Articles</a></li>
+<li><a href='http://slidify.org/publish.html' title=''>Publish to Github Pages/Dropbox/Rpubs</a></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Wush 教學影片</h2></hgroup><article  id="wush-">
+
+<p><a href='https://www.youtube.com/watch?v=P97udK2ktuY' title=''>Slidify簡介</a> by Wush Wu<br/><a href='https://www.youtube.com/watch?v=P97udK2ktuY' title=''>https://www.youtube.com/watch?v=P97udK2ktuY</a></p>
+
+<p><a href='https://www.youtube.com/watch?v=OHKZLeKlUsM' title=''>20121203 MLDM Monday:markdown + knitr (Hangout 轉播)</a> by Wush Wu<br/><a href='https://www.youtube.com/watch?v=OHKZLeKlUsM' title=''>https://www.youtube.com/watch?v=OHKZLeKlUsM</a></p>
+
+</article></slide><slide class=''><hgroup><h2>繼續學習之路</h2></hgroup><article >
+
+<ul>
+<li>了解自己的需求，詢問關鍵字與函數</li>
+<li><a href='http://www.meetup.com/Taiwan-R' title=''>Taiwan R User Group</a>，mailing list: <a href='mailto:Taiwan-useR-Group-list@meetup.com' title=''>Taiwan-useR-Group-list@meetup.com</a></li>
+<li><a href='https://www.ptt.cc/bbs/R_Language/index.html' title=''>ptt R_Language版</a></li>
+<li><a href='https://groups.google.com/forum/#!forum/taiwanruser' title=''>R軟體使用者論壇</a></li>
+<li><a href='http://stackoverflow.com/' title=''>StackOverflow</a></li>
+</ul></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/hammer.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/slide-controller.js"></script>
+<script src="Rmd_Introduction_Pixnet_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
