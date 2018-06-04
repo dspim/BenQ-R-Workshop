@@ -10,5 +10,5 @@
 ## R語言課程授課投影片
 - [Quick R Introduction](https://dspim.github.io/BenQ-R-Workshop/RBasic.html)
 - [Data ETL with R](https://dspim.github.io/BenQ-R-Workshop/DataETL.html)
-- [EDA with R](https://dspim.github.io/BenQ-R-Workshop/R_EDA_Visualization.html)
+- [EDA and Visualization with R](https://dspim.github.io/BenQ-R-Workshop/R_EDA_Visualization.html)
 - [Reproducible research in R](https://dspim.github.io/BenQ-R-Workshop/R_markdown.html)

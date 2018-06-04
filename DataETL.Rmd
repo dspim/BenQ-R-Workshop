@@ -990,7 +990,7 @@ transaction %>%
 
 ## 樞紐分析小挑戰之資料型態轉換
 
-`summarise` 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 `Visualization in R`的課程中感受到！
+`summarise` 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 `EDA and Visualization in R`的課程中感受到！
 
 我們利用先前學的資料型態轉換的技巧來將結果轉成方便讀比較的形式
 
