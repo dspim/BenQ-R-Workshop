@@ -255,7 +255,7 @@ head(transaction)</pre>
 <pre class = 'prettyprint lang-r'>transaction &lt;- read.csv(&quot;data/transaction.csv&quot;)
 transaction &lt;- read.table(&quot;data/transaction.csv&quot;, sep = &#39;,&#39;, header = T)</pre>
 
-</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (1/4)</h2></hgroup><article  id="json-14">
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (1/2)</h2></hgroup><article  id="json-12">
 
 <pre class = 'prettyprint lang-r'>install.packages(&quot;jsonlite&quot;)</pre>
 
@@ -265,7 +265,7 @@ transaction &lt;- read.table(&quot;data/transaction.csv&quot;, sep = &#39;,&#39;
 
 </center>
 
-</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (2/4)</h2></hgroup><article  id="json-24">
+</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (2/2)</h2></hgroup><article  id="json-22">
 
 <ul>
 <li><code>fromJSON</code>: 將 <code>JSON</code> 轉換成 Factor, DataFrame, Matrix 等格式，<code>?fromJSON</code> 查詢。</li>
@@ -284,48 +284,11 @@ mydf</pre>
 1 Mario  32    Plumber
 2 Peach  21   Princess</pre>
 
-</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (3/4)</h2></hgroup><article  id="json-34">
-
-<ul>
-<li>資料來源：<a href='https://github.com/pixnet/2016-pixnet-hackathon-recommendation' title=''>2016-pixnet-hackathon-recommendation</a></li>
-<li>資料長相：</li>
-</ul>
-
-<center>
-
-<strong>Hackthon dataset 是否為完整的 JSON file ？</strong>
-
-</center>
-
-<br>
-
-<center>
-
-<img src = 'img/pixnet_json.jpg' height = 300>
-
-</center>
-
-</article></slide><slide class=''><hgroup><h2>讀取JSON檔案 (4/4)</h2></hgroup><article  id="json-44">
-
-<ul>
-<li>方法：使用 <code>stream_in</code> 處理這種 <code>pseudo-JSON</code> 檔案</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>pixnet_json &lt;- stream_in(url(&quot;https://raw.githubusercontent.com/pixnet/2016-pixnet-hackathon-recommendation/master/data/sample_training.json&quot;))</pre>
-
-<pre class = 'prettyprint lang-r'>head(pixnet_json)</pre>
-
-<center>
-
-<img src = 'img/pixnet_json_read.jpg' height = 350>
-
-</center>
-
 </article></slide><slide class=''><hgroup><h2>輸出表格檔案</h2></hgroup><article >
 
 <p>利用<code>write.csv</code>將<code>data.frame</code>格式的R物件另存成csv檔。為了效率，我們僅將 <code>head(data)</code> 6筆資料做輸出成 <code>transaction_head.csv</code> 即可。</p>
 
-<pre class = 'prettyprint lang-r'>write.csv(head(transaction), &quot;transaction_head.csv&quot;, row.names=FALSE,quote=FALSE)</pre>
+<pre class = 'prettyprint lang-r'>write.csv(head(transaction), &quot;transaction_head.csv&quot;, row.names=FALSE, quote=FALSE)</pre>
 
 <center>
 
@@ -644,12 +607,12 @@ head(unlist(tmp))</pre>
 <p>命名物件名稱是門藝術，當然我們也可以隨性命名：</p>
 
 <pre class = 'prettyprint lang-r'>## 假設我們現在要做這件事情
-pixnet_good &lt;- iris$Species
-pixnet_good_again &lt;- as.character(pixnet_good)
-pixnet_good_again_again &lt;- table(pixnet_good_again)
-pixnet_good_again_again</pre>
+species &lt;- iris$Species
+species_again &lt;- as.character(species)
+species_again_again &lt;- table(species_again)
+species_again_again</pre>
 
-<pre >pixnet_good_again
+<pre >species_again
     setosa versicolor  virginica 
         50         50         50 </pre>
 
@@ -725,7 +688,7 @@ x %&gt;% mean # 由左而右順序操作</pre>
 plot(density(sample(mtcars$mpg, size=10000, replace=TRUE),
              kernel=&quot;gaussian&quot;), col=&quot;red&quot;, main=&quot;density of mpg&quot;)</pre>
 
-<p><img src="DataETL_files/figure-html/unnamed-chunk-36-1.png" width="720" /></p>
+<p><img src="DataETL_files/figure-html/unnamed-chunk-33-1.png" width="720" /></p>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
@@ -735,7 +698,7 @@ mtcars$mpg %&gt;%
     density(kernel=&quot;gaussian&quot;) %&gt;%
     plot(col=&quot;red&quot;, main=&quot;density of mpg&quot;)</pre>
 
-<p><img src="DataETL_files/figure-html/unnamed-chunk-37-1.png" width="720" /></p>
+<p><img src="DataETL_files/figure-html/unnamed-chunk-34-1.png" width="720" /></p>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Manipulation : 字串資料處理</h2></hgroup><article  id="data-manipulation-">
 
@@ -924,7 +887,7 @@ trac_type %&gt;% str_replace(&#39;(土地+建物)&#39;,&#39;&#39;) %&gt;% head</
 </article></slide><slide class=''><hgroup><h2>學習dplyr的官方方式：<code>vignette</code></h2></hgroup><article  id="dplyrvignette">
 
 <pre class = 'prettyprint lang-r'>vignette(all = TRUE, package = &quot;dplyr&quot;)
-vignette(&quot;introduction&quot;, package = &quot;dplyr&quot;)</pre>
+vignette(&quot;dplyr&quot;, package = &quot;dplyr&quot;)</pre>
 
 <ul>
 <li>更詳細的dplyr介紹可以閱讀dplyr的小論文</li>
@@ -1087,7 +1050,7 @@ transaction_new %&gt;% select(price_total, area_build, price_per_unit) %&gt;% he
 <li>移除重複資料: <code>distinct(transaction)</code></li>
 <li>隨機抽取資料: <code>sample_n(transaction, 5)</code></li>
 <li>抽取指定列: <code>slice(transaction, c(1,3,4,5))</code></li>
-<li>更多請見<a href='https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf' title=''>dplyr Cheatsheet</a></li>
+<li>更多請見<a href='https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf' title=''>dplyr Cheatsheet</a></li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>Data Manipulation 小挑戰</h2></hgroup><article  id="data-manipulation-">
@@ -1097,8 +1060,8 @@ transaction_new %&gt;% select(price_total, area_build, price_per_unit) %&gt;% he
 <li>方法：<code>filter()</code> + <code>str_()</code></li>
 </ul>
 
-<div id="htmlwidget-9f1fabdeb605f7c28005" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9f1fabdeb605f7c28005">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],[2,4,5,6,7,8],["臺北市","臺北市","臺北市","臺北市","臺北市","臺北市"],["中山區","北投區","中山區","北投區","北投區","南港區"],[102,102,102,102,102,102],[1,1,1,1,1,1],["房地(土地+建物)","房地(土地+建物)","房地(土地+建物)","房地(土地+建物)+車位","房地(土地+建物)+車位","房地(土地+建物)+車位"],["土地1建物1車位0","土地1建物1車位0","土地1建物1車位0","土地1建物1車位2","土地1建物1車位2","土地1建物1車位1"],["商","商","住","住","住","住"],["住宅大樓(11層含以上有電梯)","住宅大樓(11層含以上有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","住宅大樓(11層含以上有電梯)"],[701228,851218,970624,1010724,1010724,1000414],[10.71,4.7,30.97,141.24,139.56,22.79],[104.5,39.35,185.2,287.35,284.27,170.09],[0,0,0,14.14,14.14,33.87],[12010000,4600000,23800000,62000000,58000000,29700000],[114928,116900,128510,218147,204716,174613],[32,17,5,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>X<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>trac_year<\/th>\n      <th>trac_month<\/th>\n      <th>trac_type<\/th>\n      <th>trac_content<\/th>\n      <th>use_type<\/th>\n      <th>build_type<\/th>\n      <th>build_ymd<\/th>\n      <th>area_land<\/th>\n      <th>area_build<\/th>\n      <th>area_park<\/th>\n      <th>price_total<\/th>\n      <th>price_unit<\/th>\n      <th>age<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[1,4,5,10,11,12,13,14,15,16]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+<div id="htmlwidget-9e2c93bfa4a9cd9e37b1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9e2c93bfa4a9cd9e37b1">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],[2,4,5,6,7,8],["臺北市","臺北市","臺北市","臺北市","臺北市","臺北市"],["中山區","北投區","中山區","北投區","北投區","南港區"],[102,102,102,102,102,102],[1,1,1,1,1,1],["房地(土地+建物)","房地(土地+建物)","房地(土地+建物)","房地(土地+建物)+車位","房地(土地+建物)+車位","房地(土地+建物)+車位"],["土地1建物1車位0","土地1建物1車位0","土地1建物1車位0","土地1建物1車位2","土地1建物1車位2","土地1建物1車位1"],["商","商","住","住","住","住"],["住宅大樓(11層含以上有電梯)","住宅大樓(11層含以上有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","華廈(10層含以下有電梯)","住宅大樓(11層含以上有電梯)"],[701228,851218,970624,1010724,1010724,1000414],[10.71,4.7,30.97,141.24,139.56,22.79],[104.5,39.35,185.2,287.35,284.27,170.09],[0,0,0,14.14,14.14,33.87],[12010000,4600000,23800000,62000000,58000000,29700000],[114928,116900,128510,218147,204716,174613],[32,17,5,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>X<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>trac_year<\/th>\n      <th>trac_month<\/th>\n      <th>trac_type<\/th>\n      <th>trac_content<\/th>\n      <th>use_type<\/th>\n      <th>build_type<\/th>\n      <th>build_ymd<\/th>\n      <th>area_land<\/th>\n      <th>area_build<\/th>\n      <th>area_park<\/th>\n      <th>price_total<\/th>\n      <th>price_unit<\/th>\n      <th>age<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[1,4,5,10,11,12,13,14,15,16]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
 
 </article></slide><slide class=''><hgroup><h2>Data Manipulation 小挑戰參考解答</h2></hgroup><article  id="data-manipulation-">
 
@@ -1208,11 +1171,7 @@ wide</pre>
 
 <pre class = 'prettyprint lang-r'>left_join(a, b, by = &quot;x1&quot;)</pre>
 
-<center>
-
-<img src='img/left_join.png' height=400></img>
-
-</center>
+<p><left><img src='img/a+b.png' height=200></img></left> <right><img src='img/left_join_dplyr.png' height=200></img></right></p>
 
 </article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join--1">
 
@@ -1220,11 +1179,7 @@ wide</pre>
 
 <pre class = 'prettyprint lang-r'>right_join(a, b, by = &quot;x1&quot;)</pre>
 
-<center>
-
-<img src='img/right_join.png' height=400></img>
-
-</center>
+<p><left><img src='img/a+b.png' height=200></img></left> <right><img src='img/right_join_dplyr.png' height=200></img></right></p>
 
 </article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join--2">
 
@@ -1232,41 +1187,33 @@ wide</pre>
 
 <pre class = 'prettyprint lang-r'>inner_join(a, b, by = &quot;x1&quot;)</pre>
 
-<center>
+<p><left><img src='img/a+b.png' height=200></img></left> <right><img src='img/inner_join_dplyr.png' height=200></img></right></p>
 
-<img src='img/inner_join.png' height=400></img>
+</article></slide><slide class=''><hgroup><h2><code>_join</code> 資料表合併</h2></hgroup><article  id="join--3">
 
-</center>
+<p><strong>join family：full_join</strong></p>
+
+<pre class = 'prettyprint lang-r'>full_join(a, b, by = &quot;x1&quot;)</pre>
+
+<p><left><img src='img/a+b.png' height=200></img></left> <right><img src='img/full_join_dplyr.png' height=200></img></right></p>
 
 </article></slide><slide class=''><hgroup><h2><code>union (聯集)</code> 資料表合併</h2></hgroup><article  id="union--">
 
 <pre class = 'prettyprint lang-r'>union(a, b)</pre>
 
-<center>
-
-<img src='img/union.png' height=400></img>
-
-</center>
+<p><left><img src='img/y+z.png' height=200></img></left> <right><img src='img/union_dplyr.png' height=200></img></right></p>
 
 </article></slide><slide class=''><hgroup><h2><code>intersect (交集)</code> 資料表合併</h2></hgroup><article  id="intersect--">
 
 <pre class = 'prettyprint lang-r'>intersect(a, b)</pre>
 
-<center>
-
-<img src='img/intersect.png' height=400></img>
-
-</center>
+<p><left><img src='img/y+z.png' height=200></img></left> <right><img src='img/intersect_dplyr.png' height=200></img></right></p>
 
 </article></slide><slide class=''><hgroup><h2><code>setdiff (插集)</code> 資料表合併</h2></hgroup><article  id="setdiff--">
 
 <pre class = 'prettyprint lang-r'>setdiff(a, b)</pre>
 
-<center>
-
-<img src='img/setdiff.png' height=400></img>
-
-</center>
+<p><left><img src='img/y+z.png' height=200></img></left> <right><img src='img/setdiff_dplyr.png' height=200 width=400></img></right></p>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Data Aggregation : 樞紐分析</h2></hgroup><article  id="data-aggregation-">
 
@@ -1343,8 +1290,8 @@ wide</pre>
 <li>Tips : filter -&gt; group_by(a,b) -&gt; summrise() -&gt; arrange</li>
 </ul>
 
-<div id="htmlwidget-064acacaccee5b86d310" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-064acacaccee5b86d310">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],["中山區","中山區","中山區","中山區","中山區","中山區"],["住宅大樓(11層含以上有電梯)","公寓(5樓含以下無電梯)","其他","套房(1房1廳1衛)","店面(店鋪)","廠辦"],[200214,167935,169688,188090,321502,108095]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>build_type<\/th>\n      <th>mean<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+<div id="htmlwidget-9e2c93bfa4a9cd9e37b1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9e2c93bfa4a9cd9e37b1">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6"],["中山區","中山區","中山區","中山區","中山區","中山區"],["住宅大樓(11層含以上有電梯)","公寓(5樓含以下無電梯)","其他","套房(1房1廳1衛)","店面(店鋪)","廠辦"],[200214,167935,169688,188090,321502,108095]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>build_type<\/th>\n      <th>mean<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
@@ -1355,7 +1302,7 @@ wide</pre>
 
 </article></slide><slide class=''><hgroup><h2>樞紐分析小挑戰之資料型態轉換</h2></hgroup><article >
 
-<p><code>summarise</code> 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 <code>EDA in R</code>的課程中感受到！</p>
+<p><code>summarise</code> 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 <code>Visualization in R</code>的課程中感受到！</p>
 
 <p>我們利用先前學的資料型態轉換的技巧來將結果轉成方便讀比較的形式</p>
 
@@ -1367,8 +1314,8 @@ wide</pre>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article >
 
-<div id="htmlwidget-77109517c004db1f0544" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-77109517c004db1f0544">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["中山區","中正區","信義區","內湖區","北投區","南港區","士林區","大同區","大安區","文山區","松山區","萬華區"],[200214,229674,258466,182017,158507,176615,183989,163586,265114,141354,204394,116203],[null,null,null,null,null,null,null,null,null,null,null,null],[167935,184602,172837,131326,122253,135070,142213,122370,230102,114889,182431,106512],[169688,186258,209249,156739,132688,104939,179030,127207,255146,128248,179269,122529],[188090,244910,273522,172550,125080,172635,206310,160747,299884,142802,236885,139359],[null,null,null,null,null,null,null,null,null,null,null,null],[321502,365934,306637,233378,226424,298272,332198,262094,493982,236666,346354,271327],[108095,null,null,122199,83056,104075,195339,null,null,null,null,null],[183347,224495,198445,158353,128830,163638,177342,152853,262002,132964,208602,117275],[192375,206515,228954,158840,112483,145637,187768,142733,260289,159270,196147,156886],[null,null,null,null,null,null,null,null,null,null,null,null],[289989,252855,310359,173753,220166,131345,294524,170251,298228,128023,218961,184842]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>住宅大樓(11層含以上有電梯)<\/th>\n      <th>倉庫<\/th>\n      <th>公寓(5樓含以下無電梯)<\/th>\n      <th>其他<\/th>\n      <th>套房(1房1廳1衛)<\/th>\n      <th>工廠<\/th>\n      <th>店面(店鋪)<\/th>\n      <th>廠辦<\/th>\n      <th>華廈(10層含以下有電梯)<\/th>\n      <th>辦公商業大樓<\/th>\n      <th>農舍<\/th>\n      <th>透天厝<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
+<div id="htmlwidget-ce88f662643a2dc63a31" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ce88f662643a2dc63a31">{"x":{"filter":"none","extensions":["FixedColumns"],"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["中山區","中正區","信義區","內湖區","北投區","南港區","士林區","大同區","大安區","文山區","松山區","萬華區"],[200214,229674,258466,182017,158507,176615,183989,163586,265114,141354,204394,116203],[null,null,null,null,null,null,null,null,null,null,null,null],[167935,184602,172837,131326,122253,135070,142213,122370,230102,114889,182431,106512],[169688,186258,209249,156739,132688,104939,179030,127207,255146,128248,179269,122529],[188090,244910,273522,172550,125080,172635,206310,160747,299884,142802,236885,139359],[null,null,null,null,null,null,null,null,null,null,null,null],[321502,365934,306637,233378,226424,298272,332198,262094,493982,236666,346354,271327],[108095,null,null,122199,83056,104075,195339,null,null,null,null,null],[183347,224495,198445,158353,128830,163638,177342,152853,262002,132964,208602,117275],[192375,206515,228954,158840,112483,145637,187768,142733,260289,159270,196147,156886],[null,null,null,null,null,null,null,null,null,null,null,null],[289989,252855,310359,173753,220166,131345,294524,170251,298228,128023,218961,184842]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>district<\/th>\n      <th>住宅大樓(11層含以上有電梯)<\/th>\n      <th>倉庫<\/th>\n      <th>公寓(5樓含以下無電梯)<\/th>\n      <th>其他<\/th>\n      <th>套房(1房1廳1衛)<\/th>\n      <th>工廠<\/th>\n      <th>店面(店鋪)<\/th>\n      <th>廠辦<\/th>\n      <th>華廈(10層含以下有電梯)<\/th>\n      <th>辦公商業大樓<\/th>\n      <th>農舍<\/th>\n      <th>透天厝<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"t","scrollX":true,"fixedColumns":true,"initComplete":"function(settings, json) {\n$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});\n}","columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.initComplete"],"jsHooks":[]}</script>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Recap Today</h2></hgroup><article  id="recap-today">
 
@@ -1485,7 +1432,7 @@ wide</pre>
 <li><a href='https://www.rstudio.com/resources/cheatsheets/' title=''>必收的 Rstudio 發表的大量 Cheatsheet</a></li>
 <li><a href='http://datascienceandr.org/' title=''>R語言翻轉教室 &#8211; 全中文R語言互動式教材</a></li>
 <li><a href='http://tidyverse.org/' title=''>tidyverse 介紹</a></li>
-<li><a href='https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html' title=''>Introduction to dplyr</a></li>
+<li><a href='https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html' title=''>Introduction to dplyr</a></li>
 <li><a href='http://www.cookbook-r.com/' title=''>Cookbook for R</a></li>
 </ul>
 

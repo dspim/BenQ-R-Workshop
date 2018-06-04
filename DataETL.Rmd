@@ -143,7 +143,7 @@ transaction <- read.csv("data/transaction.csv")
 transaction <- read.table("data/transaction.csv", sep = ',', header = T)
 ```
 
-## 讀取JSON檔案 (1/4)
+## 讀取JSON檔案 (1/2)
 
 ```{r, eval = F}
 install.packages("jsonlite")
@@ -154,7 +154,7 @@ library(jsonlite)
 
 <center><img src = 'img/csvtojson.jpg' height = 400></center>
 
-## 讀取JSON檔案 (2/4)
+## 讀取JSON檔案 (2/2)
 
 - `fromJSON`: 將 `JSON` 轉換成 Factor, DataFrame, Matrix 等格式，`?fromJSON` 查詢。
 - `toJSON`: `?toSON`
@@ -170,37 +170,12 @@ mydf
 ```
 
 
-## 讀取JSON檔案 (3/4)
-
-- 資料來源：[2016-pixnet-hackathon-recommendation](https://github.com/pixnet/2016-pixnet-hackathon-recommendation)
-- 資料長相：
-
-<center>**Hackthon dataset 是否為完整的 JSON file ？**</center>
-<br>
-<center><img src = 'img/pixnet_json.jpg' height = 300></center>
-
-## 讀取JSON檔案 (4/4)
-
-- 方法：使用 `stream_in` 處理這種 `pseudo-JSON` 檔案
-
-```{r, include=F}
-pixnet_json <- stream_in(url("https://raw.githubusercontent.com/pixnet/2016-pixnet-hackathon-recommendation/master/data/sample_training.json"))
-```
-```{r, eval = F}
-pixnet_json <- stream_in(url("https://raw.githubusercontent.com/pixnet/2016-pixnet-hackathon-recommendation/master/data/sample_training.json"))
-```
-```{r, eval=F}
-head(pixnet_json)
-```
-
-<center><img src = 'img/pixnet_json_read.jpg' height = 350></center>
-
 ## 輸出表格檔案
 
 利用`write.csv`將`data.frame`格式的R物件另存成csv檔。為了效率，我們僅將 `head(data)` 6筆資料做輸出成 `transaction_head.csv` 即可。
 
 ```{r echo=TRUE, eval=FALSE}
-write.csv(head(transaction), "transaction_head.csv", row.names=FALSE,quote=FALSE)
+write.csv(head(transaction), "transaction_head.csv", row.names=FALSE, quote=FALSE)
 ```
 
 <center><img src = 'img/writecsv.jpg' width = 60%></center>
@@ -445,10 +420,10 @@ unique(transaction$district)
 
 ```{r}
 ## 假設我們現在要做這件事情
-pixnet_good <- iris$Species
-pixnet_good_again <- as.character(pixnet_good)
-pixnet_good_again_again <- table(pixnet_good_again)
-pixnet_good_again_again
+species <- iris$Species
+species_again <- as.character(species)
+species_again_again <- table(species_again)
+species_again_again
 ```
 
 -----
@@ -667,7 +642,7 @@ trac_type %>% str_replace('\\(土地\\+建物\\)','') %>% head
 
 ```{r dplyr-vignette, echo = TRUE, eval=FALSE}
 vignette(all = TRUE, package = "dplyr")
-vignette("introduction", package = "dplyr")
+vignette("dplyr", package = "dplyr")
 ```
 
 - 更詳細的dplyr介紹可以閱讀dplyr的小論文
@@ -777,7 +752,7 @@ transaction_new %>% select(price_total, area_build, price_per_unit) %>% head
 - 移除重複資料: `distinct(transaction)`
 - 隨機抽取資料: `sample_n(transaction, 5)`
 - 抽取指定列: `slice(transaction, c(1,3,4,5))`
-- 更多請見[dplyr Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf)
+- 更多請見[dplyr Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
 
 ## Data Manipulation 小挑戰
 
@@ -883,7 +858,8 @@ wide %>%
 left_join(a, b, by = "x1")
 ```
 
-<center><img src='img/left_join.png' height=400></img></center>
+<left><img src='img/a+b.png' height=200></img></left>
+<right><img src='img/left_join_dplyr.png' height=200></img></right>
 
 ## `_join` 資料表合併
 
@@ -893,7 +869,8 @@ left_join(a, b, by = "x1")
 right_join(a, b, by = "x1")
 ```
 
-<center><img src='img/right_join.png' height=400></img></center>
+<left><img src='img/a+b.png' height=200></img></left>
+<right><img src='img/right_join_dplyr.png' height=200></img></right>
 
 ## `_join` 資料表合併
 
@@ -903,7 +880,20 @@ right_join(a, b, by = "x1")
 inner_join(a, b, by = "x1")
 ```
 
-<center><img src='img/inner_join.png' height=400></img></center>
+<left><img src='img/a+b.png' height=200></img></left>
+<right><img src='img/inner_join_dplyr.png' height=200></img></right>
+
+## `_join` 資料表合併
+
+**join family：full_join**
+
+```{r, eval = F}
+full_join(a, b, by = "x1")
+```
+
+<left><img src='img/a+b.png' height=200></img></left>
+<right><img src='img/full_join_dplyr.png' height=200></img></right>
+
 
 ## `union (聯集)` 資料表合併
 
@@ -911,7 +901,9 @@ inner_join(a, b, by = "x1")
 union(a, b)
 ```
 
-<center><img src='img/union.png' height=400></img></center>
+<left><img src='img/y+z.png' height=200></img></left>
+<right><img src='img/union_dplyr.png' height=200></img></right>
+
 
 ## `intersect (交集)` 資料表合併
 
@@ -919,7 +911,9 @@ union(a, b)
 intersect(a, b)
 ```
 
-<center><img src='img/intersect.png' height=400></img></center>
+<left><img src='img/y+z.png' height=200></img></left>
+<right><img src='img/intersect_dplyr.png' height=200></img></right>
+
 
 ## `setdiff (插集)` 資料表合併
 
@@ -927,7 +921,9 @@ intersect(a, b)
 setdiff(a, b)
 ```
 
-<center><img src='img/setdiff.png' height=400></img></center>
+<left><img src='img/y+z.png' height=200></img></left>
+<right><img src='img/setdiff_dplyr.png' height=200 width=400></img></right>
+
 
 # Data Aggregation : 樞紐分析
 
@@ -994,7 +990,7 @@ transaction %>%
 
 ## 樞紐分析小挑戰之資料型態轉換
 
-`summarise` 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 `EDA in R`的課程中感受到！
+`summarise` 所回傳的 long-format 其實較適合我們後續畫圖(ggplot2)的資料型態，這部份各位會在下一次 `Visualization in R`的課程中感受到！
 
 我們利用先前學的資料型態轉換的技巧來將結果轉成方便讀比較的形式
 
@@ -1086,7 +1082,7 @@ transaction %>%
 - [必收的 Rstudio 發表的大量 Cheatsheet](https://www.rstudio.com/resources/cheatsheets/)
 - [R語言翻轉教室 -- 全中文R語言互動式教材](http://datascienceandr.org/)
 - [tidyverse 介紹](http://tidyverse.org/)
-- [Introduction to dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)
+- [Introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
 - [Cookbook for R](http://www.cookbook-r.com/)
 
 ## 繼續學習之路
