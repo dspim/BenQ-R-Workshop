@@ -246,7 +246,7 @@ dat2 <- read.csv(url, fileEncoding = "big5")
 
 - For SPSS and Stata datasets, use the `foreign` package
   - Cars: [Cars.sav](http://calcnet.mth.cmich.edu/org/spss/V16_materials/DataSets_v16/Cars.sav)
-- Milk Production: [p004.dat](http://www.ats.ucla.edu/stat/stata/examples/chp/p004.dta)
+- Milk Production: [p004.dta](https://stats.idre.ucla.edu/stat/stata/examples/chp/p004.dta)
 
 ```{r, eval = F}
 # install.packages("foreign") # 安裝R套件 foreign
