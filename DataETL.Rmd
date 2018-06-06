@@ -157,7 +157,7 @@ library(jsonlite)
 ## 讀取JSON檔案 (2/2)
 
 - `fromJSON`: 將 `JSON` 轉換成 Factor, DataFrame, Matrix 等格式，`?fromJSON` 查詢。
-- `toJSON`: `?toSON`
+- `toJSON`: `?toJSON`
 
 ```{r}
 json <-
