@@ -898,7 +898,7 @@ full_join(a, b, by = "x1")
 ## `union (聯集)` 資料表合併
 
 ```{r, eval = F}
-union(a, b)
+union(y, z)
 ```
 
 <left><img src='img/y+z.png' height=200></img></left>
@@ -908,7 +908,7 @@ union(a, b)
 ## `intersect (交集)` 資料表合併
 
 ```{r, eval = F}
-intersect(a, b)
+intersect(y, z)
 ```
 
 <left><img src='img/y+z.png' height=200></img></left>
@@ -918,7 +918,7 @@ intersect(a, b)
 ## `setdiff (插集)` 資料表合併
 
 ```{r, eval = F}
-setdiff(a, b)
+setdiff(y, z)
 ```
 
 <left><img src='img/y+z.png' height=200></img></left>
