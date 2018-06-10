@@ -103,12 +103,13 @@ ggthemr('flat')
 ## ggplot2 基本架構
 
 - 資料 (data) 和映射 (mapping)
-- 幾何對象 (`geom`etric)
+- 美學對應（`aes`thetic）
+- 幾何圖案 (`geom`etric)
 - 座標尺度 (`scale`)
 - 統計轉換 (`stat`istics)
 - 座標系統 (`coord`inante)
 - 圖層 (layer)
-- 刻面 (`facet`)
+- 繪圖面 (`facet`)
 - 主題 (`theme`)
 
 ## ggplot2 基本架構(2)
@@ -264,19 +265,19 @@ summary(data)
 - 先來`比較`看看2013年在各縣市的案件交易量
 
 ```{r,warning=FALSE,fig.height=3,fig.align='center', message=FALSE}
-thm <- function() theme(text=element_text(size = 15, family = "SimHei")) # 控制字體與大小
+thm <- function() theme(text = element_text(size = 15, family = "SimHei")) # 控制字體與大小
     # SimHei是只有Mac才有的字體, 用來解決Mac系統中文顯示錯誤的問題
     # Windows系統使用者請忽略 `+ thm()` 指令
 data %>% 
-  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() # stat = "count" 算個數
+  ggplot(aes(x = city)) + geom_bar(stat = "count") + thm() # stat = "count" 算個數
 ```
 
 ## Change labels !
 
 ```{r,warning=FALSE,fig.height=3.5,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() +
-  labs(title="各縣市交易量",x="縣市",y="交易量") # lab用來幫圖形的標題、x軸與y軸做命名
+  ggplot(aes(x = city)) + geom_bar(stat = "count") + thm() +
+  labs(title = "各縣市交易量", x = "縣市", y = "交易量") # lab用來幫圖形的標題、x軸與y軸做命名
 ```
 
 ## Change colors !
@@ -284,9 +285,9 @@ data %>%
 - 顏色調整：`color` vs `fill`?
 ```{r,warning=FALSE,fig.height=3.5,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=city)) + geom_bar(stat = "count") + thm() +
-  labs(title="各縣市交易量",x="縣市",y="交易量") +
-  geom_bar(fill='snow', color='black') # see colors() if you're picky
+  ggplot(aes(x = city)) + geom_bar(stat = "count") + thm() +
+  labs(title = "各縣市交易量", x = "縣市", y = "交易量") +
+  geom_bar(fill = 'snow', color = 'black') # see colors() if you're picky
 ```
 
 
@@ -299,7 +300,7 @@ data %>%
 table = data %>% 
   filter(city == "臺北市") %>% 
   group_by(district) %>% 
-  summarise(Count=n())  # dplyr::n 用來計數
+  summarise(Count = n())  # dplyr::n 用來計數
 table
 ```
 
@@ -307,7 +308,7 @@ table
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 table %>% 
-  ggplot(aes(x=district,y=Count)) +
+  ggplot(aes(x = district, y = Count)) +
   geom_bar(stat = "identity") + thm() # stat='identity'以表格的值做為bar的高度
 ```
 
@@ -315,8 +316,8 @@ table %>%
 ## Reoder x
 ```{r ,warning=FALSE,fig.align='center', message=FALSE}
 table %>% 
-  ggplot(aes(x=reorder(district,-Count), y=Count)) +
-  geom_bar(stat='identity') + thm() +
+  ggplot(aes(x = reorder(district, -Count), y = Count)) +
+  geom_bar(stat = 'identity') + thm() +
   labs(titles = "臺北市各行政區交易量", x = "行政區", y = "Count")
 ```
 
@@ -327,9 +328,9 @@ table %>%
 ```{r,echo=FALSE}
 table = data %>% 
   filter(city == "臺北市" | city == "高雄市" ) %>% 
-  group_by(city,use_type) %>% 
+  group_by(city, use_type) %>% 
   summarise(Count = n()) %>% 
-  mutate(rate = round(Count/sum(Count),2) ) 
+  mutate(rate = round(Count/sum(Count), 2)) 
 table
 ```
 
@@ -338,9 +339,9 @@ table
 ```{r, eval=FALSE}
 table = data %>% 
   filter(city == "臺北市" | city == "高雄市" ) %>% 
-  group_by(city,use_type) %>% 
+  group_by(city, use_type) %>% 
   summarise(Count = n()) %>% 
-  mutate(rate = round(Count/sum(Count),2) ) 
+  mutate(rate = round(Count/sum(Count), 2)) 
 ```
 
 <center>
@@ -379,7 +380,7 @@ table
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 table %>% 
-  ggplot(aes(x=trac_month,y=Count ,group = 1)) + 
+  ggplot(aes(x = trac_month, y = Count, group = 1)) + 
   geom_line() + thm() + labs(x = "交易月份" , y = "交易數量")
 ```
 
@@ -390,8 +391,8 @@ table %>%
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 table = data %>% 
-  group_by(city,trac_month) %>% 
-  summarise(Count=n()) 
+  group_by(city, trac_month) %>% 
+  summarise(Count = n()) 
 table
 ```
 
@@ -399,7 +400,7 @@ table
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 table %>% 
-  ggplot(aes(x=trac_month,y=Count,group=city,color=city)) +
+  ggplot(aes(x = trac_month, y = Count, group = city, color = city)) +
   geom_line() + geom_point() + thm() + 
   labs(x = "交易月份" , y = "交易數量")
 ```
@@ -413,9 +414,9 @@ table %>%
 ```{r,echo=FALSE}
 data %>% 
   filter(city == "臺北市" | city == "高雄市" ) %>% 
-  group_by(city,age) %>% 
+  group_by(city, age) %>% 
   summarise(Count = n()) %>% 
-  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  ggplot(aes(x = age, y = Count, group = city, color = city)) +
   geom_line() + geom_point() + thm()
 ```
 
@@ -424,9 +425,9 @@ data %>%
 ```{r,echo=TRUE}
 data %>% 
   filter(city == "臺北市" | city == "高雄市" ) %>% 
-  group_by(city,age) %>% 
+  group_by(city, age) %>% 
   summarise(Count = n()) %>% 
-  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  ggplot(aes(x = age, y = Count, group = city, color = city)) +
   geom_line() + geom_point() + thm()
 ```
 
@@ -437,9 +438,9 @@ data %>%
 ```{r}
 data %>% 
   filter(city == "臺北市" | city == "高雄市" ) %>% 
-  group_by(city,age) %>% 
+  group_by(city, age) %>% 
   summarise(Count = n()) %>% 
-  ggplot(aes(x=age,y=Count,group=city,color=city)) +
+  ggplot(aes(x = age, y = Count, group = city, color = city)) +
   geom_line() + geom_point() + thm() + coord_cartesian(xlim = c(-3, 10))
 ```
 
@@ -449,7 +450,7 @@ data %>%
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=age, y =..count..)) + 
+  ggplot(aes(x = age, y =..count..)) + 
   geom_histogram()
 ```
 
@@ -459,15 +460,15 @@ data %>%
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=age, y =..density..)) + 
+  ggplot(aes(x = age, y =..density..)) + 
   geom_histogram()
 ```
 
 ## Histogram
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=age, y =..density.., fill =..count..)) + # fill 依指定欄位填色
-  geom_histogram(binwidth=.5) 
+  ggplot(aes(x = age, y =..density.., fill =..count..)) + # fill 依指定欄位填色
+  geom_histogram(binwidth = .5) 
 ```
 
 ## Histogram + density
@@ -476,9 +477,9 @@ data %>%
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 data %>% 
-  ggplot(aes(x=age,y=..density..)) + 
-  geom_histogram(color="black", fill="white") +
-  geom_density(alpha=.2, fill="#FF6666") # alpha設定透明度
+  ggplot(aes(x = age, y = ..density..)) + 
+  geom_histogram(color = "black", fill = "white") +
+  geom_density(alpha = .2, fill = "#FF6666") # alpha設定透明度
 ```
 
 # 量化 v.s. 量化：Scatter Plot
@@ -489,8 +490,8 @@ data %>%
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 iris %>% 
-  ggplot(aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
-  geom_point(shape=1, size=2) # shape控制圖示；size控制點的大小
+  ggplot(aes(x = Sepal.Length, y = Petal.Length, color = Species)) + 
+  geom_point(shape = 1, size = 2) # shape控制圖示；size控制點的大小
 ```
 
 ## point shape types in `ggplot2`
@@ -503,9 +504,9 @@ iris %>%
 - 參數放在 aes() 函數裡面，表示資料依據指定欄位內容做不同的shape/size變化
 ```{r,warning=FALSE,fig.align='center', message=FALSE}
 iris %>% 
-  ggplot(aes(x=Sepal.Length, y=Petal.Length, color=Species, shape = Species, size = Species)) + 
-  geom_point() + scale_shape_manual(values=c(1,5,7)) +  # 控制 shape 顯示圖示
-  scale_size_manual(values=c(1,2,3))   # 控制圖示 size 顯示大小
+  ggplot(aes(x = Sepal.Length, y = Petal.Length, color = Species, shape = Species, size = Species)) + 
+  geom_point() + scale_shape_manual(values = c(1,5,7)) +  # 控制 shape 顯示圖示
+  scale_size_manual(values = c(1,2,3))   # 控制圖示 size 顯示大小
 ```
 
 ## 插播
@@ -518,11 +519,11 @@ install.packages("devtools")
 <img src='img/devtools.png' width=750 align='center'></img>
 </center>
 
-- [插播ggthemr](https://github.com/cttobin/ggthemr)
+- [配色懶人包ggthemr](https://github.com/cttobin/ggthemr)
 
 ## 小挑戰
 
-- 士林區,文山區,信義區三個區域的**套房(1房1廳1衛)**在屋齡與單位尺價存在著怎樣的特性？
+- 士林區,文山區,信義區三個區域的**套房(1房1廳1衛)**在屋齡與每平方公尺單價存在著怎樣的特性？
 
 ```{r,echo=FALSE}
 library(ggthemr)
@@ -531,7 +532,7 @@ ggthemr('flat')
 data %>% 
   filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
   filter(build_type == "套房(1房1廳1衛)") %>% 
-  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  ggplot(aes(x = age, y = price_unit, color = district)) + geom_point(position = "jitter") +
   thm()
 ```
 
@@ -543,7 +544,7 @@ ggthemr('flat')
 ans = data %>% 
   filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
   filter(build_type == "套房(1房1廳1衛)") %>% 
-  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  ggplot(aes(x = age, y = price_unit, color = district)) + geom_point(position = "jitter") +
   thm() 
 ans
 ```
@@ -571,7 +572,7 @@ p = dat %>%
   cor() %>% 
   as.data.frame() %>% 
   mutate(names = row.names(.)) %>% 
-  gather(class,cor,1:4) 
+  gather(class, cor, 1:4) 
 p %>% head(10)
 ```
 
@@ -581,9 +582,9 @@ p %>% head(10)
 
 ```{r}
 p %>% 
-  ggplot(aes(x=names, y=class, fill= cor)) +
+  ggplot(aes(x = names, y = class, fill= cor)) +
   geom_tile() + labs(x = "", y = "") + 
-  scale_fill_gradient2(limits=c(-1, 1))
+  scale_fill_gradient2(limits = c(-1, 1))
 ```
 
 # 進階技巧
@@ -598,7 +599,7 @@ ggthemr('flat')
 iris %>% 
   ggplot(aes(x = Sepal.Length, y = Petal.Length)) + 
   geom_point() +
-  stat_smooth(method=lm, level=.95) # add se=FALSE to disable CI
+  stat_smooth(method = lm, level = .95) # add se=FALSE to disable CI 
 ```
 
 ## `facet`
@@ -607,11 +608,11 @@ iris %>%
 
 ```{r echo = TRUE,fig.height=3.2}
 table <- data %>% 
-  group_by(city,trac_month) %>% # 選擇縣市、交易月份作為分群
+  group_by(city, trac_month) %>% # 選擇縣市、交易月份作為分群
   summarise(total = n()) # 計算分群下的總數
 table %>% 
   ggplot(aes(x = trac_month, y = total ,fill = city))+
-    geom_bar(stat='identity') + thm()
+    geom_bar(stat = 'identity') + thm()
 ```
 
 ## `facet`
@@ -619,25 +620,25 @@ table %>%
 ```{r,fig.height=4}
 table %>% 
   ggplot(aes(x = trac_month, y = total ,fill = city))+
-    geom_bar(stat='identity') + thm() +
+    geom_bar(stat = 'identity') + thm() +
     facet_wrap( ~city , nrow = 2) +
-    labs(x = "交易月份" ,y="交易量")
+    labs(x = "交易月份", y="交易量")
 ```
 
 ## `coord`_flip()
 
 ```{r,fig.height=4}
 table %>% 
-  ggplot(aes(x = trac_month, y = total ,fill = city)) + 
-  geom_bar(stat='identity') + thm() +facet_wrap( ~ city , nrow = 2)+
-  labs(x = "交易月份" ,y="交易量") + coord_flip() 
+  ggplot(aes(x = trac_month, y = total, fill = city)) + 
+  geom_bar(stat = 'identity') + thm() + facet_wrap( ~ city, nrow = 2)+
+  labs(x = "交易月份", y = "交易量") + coord_flip() 
 ```
 
 
 ## 圖形輸出
 
 - 利用 RStudio UI 介面存擋
-- 畫完圖之後，再存檔~~
+- 畫完圖之後，再存檔
 
 ```{r echo=TRUE,eval=FALSE}
 ggsave('檔案名稱')
@@ -688,7 +689,7 @@ library(plotly)
 ans = data %>% 
   filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
   filter(build_type == "套房(1房1廳1衛)") %>% 
-  ggplot(aes(x=age, y=price_unit,color = district)) + geom_point(position = "jitter") +
+  ggplot(aes(x = age, y = price_unit, color = district)) + geom_point(position = "jitter") +
   thm() 
 ans
 ```
@@ -698,7 +699,7 @@ ans
 - 是不是非常簡單？！
 
 ```{r,warning=FALSE,fig.align='center', message=FALSE, fig.height=5}
-ggplotly(ans,height = 400,width = 1000)
+ggplotly(ans, height = 400, width = 1000)
 ```
 
 ## 學習資源
@@ -713,7 +714,7 @@ ggplotly(ans,height = 400,width = 1000)
 
 - [Plotly ggplot2 Library](https://plot.ly/ggplot2/)
 
-- [highcharter套件介紹](http://jkunst.com/highcharter/oldindex.html#shiny-integration)
+- [highcharter套件介紹](http://jkunst.com/highcharter/)
 
 - [ggthemeassist外掛](https://github.com/calligross/ggthemeassist) 
 
@@ -751,18 +752,8 @@ ggplotly(ans,height = 400,width = 1000)
 
 ##  Thanks for listening
 
-- [How to read json file in r](https://unityculture.github.io/PIXNET_workshop/DataETL.html#13)
-
 <center>
-<img src='img/thx_1.png' width=850 align='center'></img>
+<img src='img/thank-you1.jpg' width=500 align='center'></img>
 </center>
-
-
-
-
-
-
-
-
 
 

@@ -2,7 +2,7 @@
 title: "Introduction to R markdown"
 subtitle: "Dynamic documents for R"
 author: "DSP作者群 @BenQ Workshop"
-date: ' 2018-06-21'
+date: '2018-06-13'
 output:
   ioslides_presentation:
     css: css/dsp.css
@@ -38,7 +38,7 @@ sys_encode <- c("utf8", "utf8", "big5")[pmatch(sys_name, c("linux", "darwin", "w
 sessionInfo() %>% capture.output %>% cat(file = "sessionInfo.log", sep = "\n")
 ```
 
-## What does data analyst do
+## What does data analyst do?
 <center>
 `r fig("analyst.png", 67)`   
 <small>http://goo.gl/52THNf</small>
@@ -50,7 +50,7 @@ sessionInfo() %>% capture.output %>% cat(file = "sessionInfo.log", sep = "\n")
 <small>https://www.coursera.org/course/repdata</small>
 </center>
 
-## Why you need R Markdown
+## Why you need R Markdown?
 
 <div style='float:right; margin: 200px;'>
   <img src='img/one1.jpg' style='height: 250px'></img>
@@ -68,8 +68,8 @@ sessionInfo() %>% capture.output %>% cat(file = "sessionInfo.log", sep = "\n")
   <small>http://goo.gl/YiJrlI</small> 
 </center>
 
-## What is R Markdown
-A convenient tool to generate reproducible document.    
+## What is R Markdown?
+A convenient tool to generate reproducible documents.    
 
 * [Markdown](http://daringfireball.net/projects/markdown/basics)
     + Lightweight markup language
@@ -358,7 +358,7 @@ You can add R Markdown and HTML in the YAML content.
 ---
 title: "Introduction to R Markdown"
 author: "DSP作者群 @BenQ Workshop"
-date: "2018-06-21"
+date: "2018-06-13"
 output: html_document
 ---
 </code></pre>
