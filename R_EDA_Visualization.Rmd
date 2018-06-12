@@ -263,6 +263,7 @@ summary(data)
 ## `geom_bar`
 
 - 先來`比較`看看2013年在各縣市的案件交易量
+- SimHei字體[下載連結](http://www.fontpalace.com/font-details/SimHei/)
 
 ```{r,warning=FALSE,fig.height=3,fig.align='center', message=FALSE}
 thm <- function() theme(text = element_text(size = 15, family = "SimHei")) # 控制字體與大小
