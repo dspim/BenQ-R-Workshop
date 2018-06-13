@@ -542,11 +542,7 @@ data %>%
 ```{r}
 library(ggthemr)
 ggthemr('flat')
-ans = data %>% 
-  filter(district == "文山區" | district == "士林區" |district == "信義區") %>% 
-  filter(build_type == "套房(1房1廳1衛)") %>% 
-  ggplot(aes(x = age, y = price_unit, color = district)) + geom_point(position = "jitter") +
-  thm() 
+ans = data %>% filter(district == "文山區" | district == "士林區" |district == "信義區") %>% filter(build_type == "套房(1房1廳1衛)") %>% ggplot(aes(x = age, y = price_unit, color = district)) + geom_point(position = "jitter") + thm() 
 ans
 ```
 
