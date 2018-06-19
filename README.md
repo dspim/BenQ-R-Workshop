@@ -12,5 +12,5 @@
 - [Data ETL with R](https://dspim.github.io/BenQ-R-Workshop/DataETL.html)
 - [EDA and Visualization with R](https://dspim.github.io/BenQ-R-Workshop/R_EDA_Visualization.html)
 - [Reproducible research in R](https://dspim.github.io/BenQ-R-Workshop/R_markdown.html)
-- [R 語言資料工程及探勘實務](https://johnsonhsieh.github.io//DSC2016-R/slide/R-Data-Mining.html#1)
+- [R 語言資料工程及探勘實務](https://dspim.github.io/BenQ-R-Workshop/R-Data-Mining.html)
 
